@@ -1,11 +1,11 @@
 /**
  * UniAuth SSO Client
- * @description Singleton instance of UniAuth client for embedded login
+ * @description Singleton instance of UniAuth client for public OAuth flow (PKCE)
  */
 import { UniAuthClient, type UserInfo } from '@55387.ai/uniauth-client';
 import { config } from './config';
 
-const { baseUrl, clientId, clientSecret } = config.uniauth;
+const { baseUrl, clientId } = config.uniauth;
 
 // Validate configuration in production
 if (!baseUrl || !clientId) {
@@ -19,12 +19,13 @@ if (!baseUrl || !clientId) {
 
 /**
  * UniAuth client instance
- * Use this to authenticate users via phone OTP or email/password
+ * Uses public OAuth flow (no client secret required)
  */
 export const uniauth = new UniAuthClient({
     baseUrl: baseUrl || '',
-    appKey: clientSecret || undefined, // appKey is used for trusted client mode
     clientId: clientId || undefined,
+    // Note: appKey (client secret) removed for security
+    // The SDK should use PKCE flow for public clients
 });
 
 // Re-export UserInfo type

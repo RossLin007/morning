@@ -1,0 +1,28 @@
+steps:
+  # Build the container image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [
+      'build',
+      '--tag', 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$_VERSION',
+      '--tag', 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:latest',
+      '--build-arg', '_VITE_API_KEY=$_VITE_API_KEY',
+      '--build-arg', '_VITE_GEMINI_API_KEY=$_VITE_GEMINI_API_KEY',
+      '--build-arg', '_VITE_SUPABASE_URL=$_VITE_SUPABASE_URL',
+      '--build-arg', '_VITE_SUPABASE_ANON_KEY=$_VITE_SUPABASE_ANON_KEY',
+      '--build-arg', '_VITE_UNIAUTH_BASE_URL=$_VITE_UNIAUTH_BASE_URL',
+      '--build-arg', '_VITE_UNIAUTH_CLIENT_ID=$_VITE_UNIAUTH_CLIENT_ID',
+      # Note: Client secret removed for security - frontend uses PKCE flow
+      '.'
+    ]
+
+# Push the image to Artifact Registry / GCR
+images:
+  - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:$_VERSION'
+  - 'gcr.io/$PROJECT_ID/$_SERVICE_NAME:latest'
+
+substitutions:
+  _SERVICE_NAME: morning-reader
+  _VERSION: latest
+
+options:
+  logging: CLOUD_LOGGING_ONLY

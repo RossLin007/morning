@@ -1,31 +1,42 @@
 import express, { Response } from "express";
-import { GoogleGenerativeAI, Content } from "@google/generative-ai";
-import { authenticateUser, AuthRequest } from "../middleware/auth";
+import { GoogleGenAI, Content } from "@google/genai";
+import { authenticateUser, AuthRequest } from "../middleware/auth.js";
 
 const router = express.Router();
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+
+// Initialize with new SDK
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
 
 router.post("/", authenticateUser, async (req: AuthRequest, res: Response) => {
   const { prompt, systemInstruction, history } = req.body;
-  
-  try {
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.0-flash",
-      // Fix: Ensure systemInstruction follows the expected type structure or use a simpler string
-      systemInstruction: systemInstruction ? { role: "system", parts: [{ text: systemInstruction }] } as Content : undefined
-    });
 
-    let result;
+  try {
+    // Build contents array for chat-style generation
+    const contents: Content[] = [];
+
+    // Add history if provided
     if (history && Array.isArray(history)) {
-      const chat = model.startChat({ history });
-      result = await chat.sendMessage(prompt);
-    } else {
-      result = await model.generateContent(prompt);
+      contents.push(...history);
     }
 
-    const response = await result.response;
-    return res.json({ text: response.text() });
+    // Add current user message
+    contents.push({
+      role: "user",
+      parts: [{ text: prompt }],
+    });
+
+    // Generate content with new SDK
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents,
+      config: systemInstruction ? {
+        systemInstruction: systemInstruction,
+      } : undefined,
+    });
+
+    return res.json({ text: response.text });
   } catch (err: any) {
+    console.error("❌ AI Generation Error:", err.message);
     return res.status(500).json({ error: err.message });
   }
 });

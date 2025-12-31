@@ -7,10 +7,10 @@ export const config = {
     version: "v2.8.0",
   },
   uniauth: {
-    // UniAuth SSO Configuration - requires trusted_client grant type
+    // UniAuth SSO Configuration
+    // Note: Client secret removed for security - using PKCE flow
     baseUrl: import.meta.env.VITE_UNIAUTH_BASE_URL ?? "",
     clientId: import.meta.env.VITE_UNIAUTH_CLIENT_ID ?? "",
-    clientSecret: import.meta.env.VITE_UNIAUTH_CLIENT_SECRET ?? "",
   },
   ai: {
     // Support both API_KEY and GEMINI_API_KEY for compatibility
