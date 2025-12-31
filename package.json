@@ -1,0 +1,11 @@
+{
+  "name": "morning-reader-fullstack",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "./scripts/dev.sh",
+    "install:all": "cd client && npm install && cd ../server && npm install",
+    "build:all": "cd client && npm run build && cd ../server && npm run build"
+  },
+  "description": "Morning Reader Fullstack Workspace"
+}

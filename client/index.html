@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>凡人晨读</title>
+    
+    <!-- PWA & Mobile Capable -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#6B8E8E">
+    <meta name="apple-mobile-web-app-title" content="Morning Reader">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/aida-public/AB6AXuCfP4znnh_4NiV2RmBfbzA7nasl5lwddMY0xgFyK0zn41u1HFzf_J0wA069Jk0hs_gL7VIYiUSEl-mIis7Ho80oKZIkO-_0me1rlSah3hpZ4RkeY_mSPsuyNId5ZONkbgcOWQcBIVrTBvXMVZS_jYvXuODT6VDu_EYvWM068pcuJ2HC_AgP5Q1l3e3O4iUKT6sb88M6eZnARhGjtz2v1zquNpYU5T-u3d-T2blZV8PPYF52cQIL9Vk98e-Dtk1KcNpQoPHrv1r4SeY">
+
+    <!-- Fonts: Local via Fontsource in index.tsx -->
+</head>
+  <body>
+    <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          try {
+            const swUrl = '/sw.js';
+            navigator.serviceWorker.register(swUrl)
+              .then(registration => {
+                console.debug('SW registered with scope:', registration.scope);
+              })
+              .catch(error => {
+                // console.warn('SW registration skipped:', error.message);
+              });
+          } catch (e) {
+            // console.warn('SW setup failed');
+          }
+        });
+      }
+    </script>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>
