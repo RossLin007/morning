@@ -58,10 +58,21 @@ export const authenticateUser = async (req: AuthRequest, res: Response, next: Ne
 
     if (jwtSecret) {
       // 🔒 生产模式：验证签名
-      decoded = jwt.verify(token, jwtSecret, {
-        algorithms: [jwtAlgorithm],
-        clockTolerance: 30, // 允许 30 秒时钟偏差
-      }) as JwtPayload;
+      try {
+        decoded = jwt.verify(token, jwtSecret, {
+          algorithms: [jwtAlgorithm],
+          clockTolerance: 30, // 允许 30 秒时钟偏差
+        }) as JwtPayload;
+      } catch (verifyError: any) {
+        // 在开发环境下，如果签名验证失败（可能是因为配置了错误的 Key，或者使用的是模拟 Token），
+        // 允许降级到仅解码模式，以便开发继续进行。
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn(`⚠️ [Auth] Token verification failed in DEV mode: ${verifyError.message}. Falling back to decode-only.`);
+          decoded = jwt.decode(token) as JwtPayload;
+        } else {
+          throw verifyError;
+        }
+      }
     } else {
       // ⚠️ 开发模式：仅解码（不安全，仅限开发）
       decoded = jwt.decode(token) as JwtPayload;

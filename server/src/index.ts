@@ -19,6 +19,7 @@ import relationshipsRouter from "./routes/relationships.js";
 import errorsRouter from "./routes/errors.js";
 import matchRouter from "./routes/match.js";
 import shopRouter from "./routes/shop.js";
+import sharesRouter from "./routes/shares.js";
 
 // Middleware
 import { errorHandler } from "./middleware/errorHandler.js";
@@ -92,6 +93,7 @@ app.use("/api/relationships", relationshipsRouter);
 app.use("/api/errors", errorsRouter);
 app.use("/api/match", matchRouter);
 app.use("/api/shop", shopRouter);
+app.use("/api/shares", sharesRouter);
 
 // --- Production: Static Assets ---
 const clientDistPath = path.resolve(__dirname, "../../client/dist");

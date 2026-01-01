@@ -168,6 +168,16 @@ class ApiClient {
           body: JSON.stringify({ itemId, price })
       })
   };
+
+  // --- Domain: Shares (Reflections & AI Insights) ---
+  public shares = {
+      get: (lessonId: string) => this.fetch(`/shares/${lessonId}`),
+      create: (data: { lessonId: string; content: string; aiInsight?: string }) => 
+          this.fetch('/shares', {
+              method: 'POST',
+              body: JSON.stringify(data)
+          })
+  };
 }
 
 export const api = new ApiClient();

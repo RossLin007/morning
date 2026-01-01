@@ -28,38 +28,40 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Initialize auth state and subscribe to changes
   useEffect(() => {
     const initAuth = async () => {
-        try {
-            // Get initial state from SDK (Sync check first)
-            const cachedUser = uniauth.getCachedUser();
-            const token = uniauth.getAccessTokenSync();
+      try {
+        // Get initial state from SDK (Sync check first)
+        const cachedUser = uniauth.getCachedUser();
+        const token = uniauth.getAccessTokenSync();
 
-            if (cachedUser && token) {
-                setUser(cachedUser);
-                setAccessToken(token);
-            } else {
-                // If sync check fails, try an async check (prevents logout on quick refresh)
-                const freshUser = await uniauth.getCurrentUser().catch(() => null);
-                if (freshUser) {
-                    const freshToken = await uniauth.getAccessToken();
-                    setUser(freshUser);
-                    setAccessToken(freshToken);
-                }
-            }
-        } finally {
-            setLoading(false);
+        if (cachedUser && token) {
+          setUser(cachedUser);
+          setAccessToken(token);
+        } else {
+          // If sync check fails, try an async check (prevents logout on quick refresh)
+          const freshUser = await uniauth.getCurrentUser().catch(() => null);
+          if (freshUser) {
+            const freshToken = await uniauth.getAccessToken();
+            setUser(freshUser);
+            setAccessToken(freshToken);
+          }
         }
+      } finally {
+        setLoading(false);
+      }
     };
 
     initAuth();
 
     // Subscribe to auth state changes from SDK
-    const unsubscribe = uniauth.onAuthStateChange((newUser, isAuth) => {
+    const unsubscribe = uniauth.onAuthStateChange((newUser: UniAuthUser | null, isAuth: boolean) => {
       setUser(newUser);
       setAccessToken(isAuth ? uniauth.getAccessTokenSync() : null);
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   const signOut = useCallback(async () => {

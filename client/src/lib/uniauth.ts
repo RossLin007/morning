@@ -21,6 +21,10 @@ if (!baseUrl || !clientId) {
  * UniAuth client instance
  * Uses public OAuth flow (no client secret required)
  */
+/**
+ * UniAuth client instance
+ * Uses public OAuth flow (no client secret required)
+ */
 export const uniauth = new UniAuthClient({
     baseUrl: baseUrl || '',
     clientId: clientId || undefined,
