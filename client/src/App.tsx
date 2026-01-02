@@ -2,14 +2,14 @@
 import React from 'react';
 import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { BottomNav } from '@/components/layout/BottomNav';
+import { GlobalSageTrigger } from '@/components/sage/GlobalSageTrigger';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { GamificationProvider } from '@/contexts/GamificationContext';
-import { ToastProvider } from '@/contexts/ToastContext'; 
+import { ToastProvider } from '@/contexts/ToastContext';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
-import { ProtectedRoute } from '@/components/ui/ProtectedRoute'; 
-import { Icon } from '@/components/ui/Icon';
-import { QueryClientProvider } from '@tanstack/react-query'; 
-import { queryClient } from '@/lib/queryClient'; 
+import { ProtectedRoute } from '@/components/ui/ProtectedRoute';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { queryClient } from '@/lib/queryClient';
 import { ScrollToTop } from '@/components/layout/ScrollToTop';
 import { RewardsOverlay } from '@/components/business/gamification/RewardsOverlay';
 import { PWAInstallBanner } from '@/components/layout/PWAInstallBanner';
@@ -33,28 +33,45 @@ import { Achievements } from '@/pages/Achievements';
 import { LearningReport } from '@/pages/LearningReport';
 import { Membership } from '@/pages/Membership';
 import { AICoach } from '@/pages/AICoach';
+import { SageChat } from '@/pages/SageChat';
 import { Notifications } from '@/pages/Notifications';
 import { ZenShop } from '@/pages/ZenShop';
 import { Settings } from '@/pages/Settings';
 import { AccountSecurity } from '@/pages/AccountSecurity';
 import { PostDetail } from '@/pages/PostDetail';
+import { DiaryList } from '@/pages/DiaryList';
+import { InsightsList } from '@/pages/InsightsList';
+import { AwarenessDiary } from '@/pages/AwarenessDiary';
+import { PastSessions } from '@/pages/PastSessions';
+import { DiaryDetail } from '@/pages/DiaryDetail';
+import { InsightDetail } from '@/pages/InsightDetail';
+import { PeerProfile } from '@/pages/PeerProfile';
+import { OpeningCeremony, ClosingCeremony } from '@/pages/Ceremony';
+import { Favorites } from '@/pages/Favorites';
+import { MyReading } from '@/pages/MyReading';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
-  const hideNavPaths = ['/course/', '/notes/', '/note/new', '/match', '/live', '/settings', '/login', '/relationships', '/membership', '/coach', '/profile/edit', '/history', '/notifications', '/report', '/post/', '/security', '/shop'];
+  const hideNavPaths = ['/course/', '/notes/', '/note/new', '/match', '/live', '/settings', '/login', '/relationships', '/membership', '/coach', '/profile/edit', '/history', '/notifications', '/report', '/post/', '/security', '/shop', '/diary', '/insights', '/sessions', '/ceremony', '/favorites', '/my-reading'];
   const showBottomNav = !hideNavPaths.some(path => location.pathname.startsWith(path));
 
   return (
-    <div className="min-h-screen bg-gray-200 dark:bg-[#050505] flex justify-center items-start md:py-8 transition-colors duration-500 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] dark:bg-none bg-fixed">
+    <div className="min-h-screen bg-[#F2F2EF] dark:bg-[#050505] flex justify-center items-start md:py-8 transition-colors duration-500 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] dark:bg-none bg-fixed">
       <div className="w-full sm:max-w-md md:max-w-2xl lg:max-w-4xl bg-background-light dark:bg-background-dark min-h-screen md:min-h-[90vh] md:rounded-[40px] md:border-[8px] md:border-white/20 dark:md:border-gray-800/20 shadow-2xl relative overflow-x-hidden overflow-y-auto no-scrollbar ring-1 ring-black/5 flex flex-col">
         <PWAInstallBanner />
         <RewardsOverlay />
-        <ScrollToTop /> 
+        <ScrollToTop />
         <div className="flex-1">
           <ErrorBoundary>
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/diary" element={<ProtectedRoute><DiaryList /></ProtectedRoute>} />
+              <Route path="/diary/new" element={<ProtectedRoute><AwarenessDiary /></ProtectedRoute>} />
+              <Route path="/diary/:id" element={<ProtectedRoute><DiaryDetail /></ProtectedRoute>} />
+              <Route path="/insights" element={<ProtectedRoute><InsightsList /></ProtectedRoute>} />
+              <Route path="/insight/:id" element={<ProtectedRoute><InsightDetail /></ProtectedRoute>} />
+              <Route path="/user/:id" element={<ProtectedRoute><PeerProfile /></ProtectedRoute>} />
               <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
               <Route path="/reading" element={<ProtectedRoute><Reading /></ProtectedRoute>} />
               <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
@@ -75,12 +92,23 @@ const AppContent: React.FC = () => {
               <Route path="/membership" element={<ProtectedRoute><Membership /></ProtectedRoute>} />
               <Route path="/shop" element={<ProtectedRoute><ZenShop /></ProtectedRoute>} />
               <Route path="/coach" element={<ProtectedRoute><AICoach /></ProtectedRoute>} />
+              <Route path="/chat" element={<ProtectedRoute><SageChat /></ProtectedRoute>} />
               <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+              <Route path="/sessions" element={<ProtectedRoute><PastSessions /></ProtectedRoute>} />
+              <Route path="/ceremony/opening" element={<ProtectedRoute><OpeningCeremony /></ProtectedRoute>} />
+              <Route path="/ceremony/closing" element={<ProtectedRoute><ClosingCeremony /></ProtectedRoute>} />
+              <Route path="/favorites" element={<ProtectedRoute><Favorites /></ProtectedRoute>} />
+              <Route path="/my-reading" element={<ProtectedRoute><MyReading /></ProtectedRoute>} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </ErrorBoundary>
         </div>
-        {showBottomNav && <BottomNav />}
+        {showBottomNav && (
+          <>
+            <GlobalSageTrigger />
+            <BottomNav />
+          </>
+        )}
       </div>
     </div>
   );

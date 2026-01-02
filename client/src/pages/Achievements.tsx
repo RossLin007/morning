@@ -1,163 +1,169 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
-import { Badge } from '@/types';
-import { useProgress } from '@/hooks/useProgress';
-import { useAchievements } from '@/hooks/useAchievements';
+import { useGamification } from '@/contexts/GamificationContext';
 
-const baseBadges: Badge[] = [
-  { id: 'b1', name: '初出茅庐', icon: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCy-w5py5ErMMk--TYTqz1yuBfwxPyxd8hm4D14F2pApPZh4YiD4Q9r43d63PcCstLdUrb5D_L8I7ZVxC9f6smmRTzd9PYgjJJ7VRyX4XCECFVDGGoWnHcsNdKydLx6PiM-TZjv1fzOm3EiznFL9sNQfwHdYHBnUGvKWWBYKpxc-366_gatXpOwJlUllUCqRnrXMRHdGPxJ3rOty4VVmlpfUxq2BTsbXUzy82iR21MnWFoct-1BjK5QCVCRdARNHP_c-BwssdcHHUs', description: '完成 1 节课程', isUnlocked: false, colorTheme: 'yellow' },
-  { id: 'b2', name: '习惯养成', icon: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAc0oHkbP1tUc6GsKMprQ6JQ7u3nNvRyMX4yJhYL5toDVFhLW3fgEi155DoFy4D7KzEd8zZnuYXjOprgLxq47QcbQcVZQdjO35JzmgzE0JcrYwQh0-qxe6af1tPPCKAji6lt1VHWL5H4UwDGEKkNvPVg0Djw8G5mp7ZNIJ5_FAMs0XqvaQu3tkuLBOo1jl87JPseW7hlJzqmrLYwhxfk2SQQu9ejZNGWSDxYNSo_JXNQ_SKc_AIrWfDwh46re3OEhYNWzLhx0i6yIY', description: '完成 3 节课程', isUnlocked: false, colorTheme: 'blue' },
-  { id: 'b3', name: '晨起鸟', icon: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAU0WYt5aJBbWRxE1VBYdtNdiaPZi-bLpCF4o0DmGAlRefFzUNagvrIQYKV3EOSn8yzXMNDsq2qHwMJGsr3HmT6ojezYwaqczBiXfDqoZPeC5b1UC0V2EZmG2J-j30nQWbmAOn7VrAXNEpNxh3aR7op6XB6L8NrTgjCx9txXmrK_kC2i4GlV_GicesP5CpBI3RTJR_9IOg1hA1fe_wm7zm0H60Jo9w4u6ugEGkr1bUlpufhkV7bDQCkfFuojlJ6_M4WYh3ksYkQJRI', description: 'Early Bird', isUnlocked: true, colorTheme: 'green' }, 
-  { id: 'b4', name: '笔记达人', icon: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCl1_0jgkrRTYKTWtnlADNecqqt6U7jdfM5Va-piKEEL-O1yUP5NPcEEF4_bUX8DoggX1We6AEbbs7oU_TbBP6faKRTHu6BSGKRFHNrmDb6RYU_SENKQFTvnb7UWTu2OzyRsIIfUxWpXfZiG6bu2dSY3HHwbQpBx9eMXS4_Ricu1UHBgd2yREU4ErwC-WCHGcqbOMRgssEpEZ6jsQFwhmf6khniIs66v6iuCx-9zBPW6K_B9t4CCXe_IxAGzojkEDolGzjr6vhnBrE', description: '发布 1 篇笔记', isUnlocked: false, colorTheme: 'purple' },
-  { id: 'b5', name: '习惯大师', icon: 'lock', description: '完成 10 节课程', isUnlocked: false, colorTheme: 'gray' },
-  { id: 'b6', name: '全勤之王', icon: 'lock', description: '连续打卡 7 天', isUnlocked: false, colorTheme: 'gray' },
+// --- Mock Data: The Path of Soul Evolution ---
+const MILESTONES = [
+   {
+      id: 1,
+      level: 1,
+      title: '凡人 (The Sleeper)',
+      desc: '沉睡于日常的琐碎，尚未觉察内心的渴望。',
+      quote: '“生活不仅是眼前的苟且，还有诗和远方。”',
+      icon: 'bedtime',
+      color: 'text-gray-400',
+      bg: 'bg-gray-100',
+      isReached: true
+   },
+   {
+      id: 2,
+      level: 3,
+      title: '觉醒者 (The Awakened)',
+      desc: '第一缕晨光照进心房，开始了向内的探索。',
+      quote: '“杀不死我的，终将使我更强大。”',
+      icon: 'wb_sunny',
+      color: 'text-orange-500',
+      bg: 'bg-orange-100',
+      isReached: true
+   },
+   {
+      id: 3,
+      level: 7,
+      title: '初学者 (The Novice)',
+      desc: '建立了微习惯，开始在晨读中汲取养分。',
+      quote: '“千里之行，始于足下。”',
+      icon: 'local_florist',
+      color: 'text-green-500',
+      bg: 'bg-green-100',
+      isReached: true
+   },
+   {
+      id: 4,
+      level: 15,
+      title: '行者 (The Practitioner)',
+      desc: '知行合一，将书中的智慧践行于生活。',
+      quote: '“知识若不转化为行动，便是虚妄。”',
+      icon: 'hiking',
+      color: 'text-blue-500',
+      bg: 'bg-blue-100',
+      isReached: false
+   },
+   {
+      id: 5,
+      level: 30,
+      title: '传灯者 (The Guide)',
+      desc: '成为他人的光，在互赖中通过教导来学习。',
+      quote: '“点亮一盏灯，照亮一大片。”',
+      icon: 'auto_awesome',
+      color: 'text-purple-500',
+      bg: 'bg-purple-100',
+      isReached: false
+   },
+   {
+      id: 6,
+      level: 50,
+      title: '智者 (The Sage)',
+      desc: '内心的丰盛溢出，与世界和谐共生。',
+      quote: '“无为而无不为。”',
+      icon: 'self_improvement',
+      color: 'text-amber-500',
+      bg: 'bg-amber-100',
+      isReached: false
+   }
 ];
 
 export const Achievements: React.FC = () => {
-  const navigate = useNavigate();
-  const [toast, setToast] = useState<string | null>(null);
+   const navigate = useNavigate();
+   const { level } = useGamification();
+   const [animate, setAnimate] = useState(false);
 
-  // Real Data from hooks
-  const { completedLessons, isLoading: isProgressLoading } = useProgress();
-  const { unlockedBadges, unlockBadge, isLoading: isAchLoading } = useAchievements();
+   useEffect(() => {
+      setAnimate(true);
+   }, []);
 
-  // Calculate Badges State
-  const badges = baseBadges.map(badge => {
-     // Check if remote says it's unlocked
-     let unlocked = unlockedBadges.some((ub: any) => ub.achievement_id === badge.id) || badge.isUnlocked;
-     
-     // Local calculation rules (Real-time detection)
-     if (!unlocked) {
-        if (badge.id === 'b1' && completedLessons.length >= 1) unlocked = true;
-        if (badge.id === 'b2' && completedLessons.length >= 3) unlocked = true;
-        if (badge.id === 'b5' && completedLessons.length >= 10) unlocked = true;
-        
-        // If detected as unlocked locally but not on remote, sync it!
-        if (unlocked) {
-            unlockBadge(badge.id);
-        }
-     }
-     
-     return { ...badge, isUnlocked: unlocked };
-  });
+   return (
+      <div className="min-h-screen bg-[#F9F9F9] dark:bg-[#0A0A0A] font-sans animate-fade-in pb-12 transition-colors duration-500">
 
-  const unlockedCount = badges.filter(b => b.isUnlocked).length;
-  const totalMinutes = completedLessons.length * 15;
+         {/* Header */}
+         <header className="sticky top-0 z-50 px-6 py-4 flex items-center justify-between bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
+            <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+               <Icon name="arrow_back" className="text-text-main dark:text-white" />
+            </button>
+            <div className="flex flex-col items-center">
+               <h1 className="text-lg font-serif font-bold text-text-main dark:text-white">英雄之旅</h1>
+               <span className="text-[10px] text-gray-400 uppercase tracking-widest">Milestones</span>
+            </div>
+            <div className="w-10"></div>
+         </header>
 
-  if (isProgressLoading || isAchLoading) return null;
+         <div className="p-6 max-w-lg mx-auto relative">
 
-  return (
-    <div className="pb-24 animate-fade-in min-h-screen bg-[#F5F7F5] dark:bg-[#0A0A0A] font-sans">
-      
-      {/* Toast Notification */}
-      {toast && (
-        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-black/80 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg animate-fade-in-up">
-          {toast}
-        </div>
-      )}
+            {/* Connecting Line (The Path) */}
+            <div className="absolute left-[42px] top-6 bottom-6 w-[2px] bg-gradient-to-b from-primary/20 via-primary/50 to-gray-200 dark:to-gray-800"></div>
 
-      {/* 1. Gallery Header */}
-      <header className="sticky top-0 z-50 px-6 py-4 flex items-center justify-between bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-100/50 dark:border-gray-800">
-        <button onClick={() => navigate(-1)} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-          <Icon name="arrow_back" className="text-text-main dark:text-white" />
-        </button>
-        <span className="text-sm font-bold tracking-[0.2em] uppercase text-text-main dark:text-white">Collection</span>
-        <div className="w-10"></div>
-      </header>
+            <div className="space-y-12">
+               {MILESTONES.map((milestone, index) => {
+                  const isCurrent = milestone.level <= level && (index === MILESTONES.length - 1 || MILESTONES[index + 1].level > level);
+                  const isLocked = !milestone.isReached && !isCurrent; // Simplified logic utilizing static fake data for now, but `isReached` hardcoded above handles visuals. 
+                  // Let's refine `isLocked` based on actual level context if we wanted dynamic, but for this fake data request, let's use the object property + level check.
+                  const actuallyReached = level >= milestone.level;
 
-      <main className="px-6 pt-6">
-        
-        {/* 2. User Stats - "Ticket Stub" Style */}
-        <section className="relative bg-white dark:bg-[#151515] rounded-[24px] p-6 shadow-sm border border-gray-100 dark:border-gray-800 mb-8 overflow-hidden">
-          {/* Decorative perforations */}
-          <div className="absolute top-0 bottom-0 left-[70%] w-[1px] border-l-2 border-dashed border-gray-200 dark:border-gray-700"></div>
-          <div className="absolute -top-3 left-[70%] w-6 h-6 bg-[#F5F7F5] dark:bg-[#0A0A0A] rounded-full -translate-x-1/2"></div>
-          <div className="absolute -bottom-3 left-[70%] w-6 h-6 bg-[#F5F7F5] dark:bg-[#0A0A0A] rounded-full -translate-x-1/2"></div>
-          
-          <div className="flex relative z-10">
-             <div className="flex-1 pr-6">
-                <h1 className="text-xl font-display font-bold text-text-main dark:text-white mb-1">Explorer</h1>
-                <p className="text-xs text-gray-400 mb-6">Lv.{1 + Math.floor(completedLessons.length/3)} • 12 Days Active</p>
-                <div className="flex gap-4">
-                   <div>
-                      <p className="text-2xl font-bold font-display text-primary">{unlockedCount}</p>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-wider">Badges</p>
-                   </div>
-                   <div>
-                      <p className="text-2xl font-bold font-display text-text-main dark:text-white">{totalMinutes}</p>
-                      <p className="text-[10px] text-gray-400 uppercase tracking-wider">Minutes</p>
-                   </div>
-                </div>
-             </div>
-             <div className="w-[30%] flex flex-col items-center justify-center pl-4">
-                <Icon name="qr_code_2" className="text-6xl text-gray-300 dark:text-gray-700 opacity-50" />
-             </div>
-          </div>
-        </section>
+                  return (
+                     <div
+                        key={milestone.id}
+                        className={`relative flex gap-6 group ${animate ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
+                        style={{ transitionDelay: `${index * 100}ms` }}
+                     >
+                        {/* Icon Node */}
+                        <div className={`relative z-10 size-12 rounded-full flex items-center justify-center shrink-0 border-4 transition-all duration-500
+                            ${actuallyReached
+                              ? `${milestone.bg} ${milestone.color} border-white dark:border-[#0A0A0A] shadow-md`
+                              : 'bg-gray-100 dark:bg-gray-800 text-gray-300 border-white dark:border-[#0A0A0A]'
+                           }
+                            ${isCurrent ? 'ring-4 ring-primary/20 scale-110' : ''}
+                        `}>
+                           <Icon name={milestone.icon} className="text-xl" filled={actuallyReached} />
+                        </div>
 
-        {/* 3. The Shelf (Badge Display) */}
-        <section>
-          <div className="flex items-center gap-2 mb-6">
-             <Icon name="diamond" className="text-primary text-sm" filled />
-             <h3 className="text-sm font-bold text-text-main dark:text-white uppercase tracking-wider">Artifacts</h3>
-          </div>
-          
-          <div className="grid grid-cols-3 gap-y-12 gap-x-4">
-            {badges.map((badge) => (
-              <div 
-                key={badge.id} 
-                className="group flex flex-col items-center relative"
-                onClick={() => handleBadgeClick(badge)}
-              >
-                 {/* Spotlight Effect */}
-                 {badge.isUnlocked && <div className="absolute top-0 w-20 h-20 bg-primary/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>}
-                 
-                 {/* The Badge */}
-                 <div className={`relative w-20 h-20 flex items-center justify-center transition-transform duration-500 group-hover:-translate-y-2 ${badge.isUnlocked ? 'cursor-pointer' : 'opacity-40 grayscale'}`}>
-                    {badge.isUnlocked ? (
-                       <img className="w-16 h-16 object-contain drop-shadow-2xl" src={badge.icon} alt={badge.name} />
-                    ) : (
-                       <div className="w-14 h-14 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center">
-                          <Icon name="lock" className="text-gray-300" />
-                       </div>
-                    )}
-                 </div>
-                 
-                 {/* Glass Shelf Base */}
-                 <div className="w-full h-3 bg-gradient-to-r from-transparent via-gray-200 dark:via-gray-700 to-transparent mt-2 rounded-[100%] opacity-50 blur-[1px]"></div>
-                 
-                 <span className={`text-xs font-bold mt-3 transition-colors ${badge.isUnlocked ? 'text-text-main dark:text-white' : 'text-gray-300'}`}>{badge.name}</span>
-              </div>
-            ))}
-          </div>
-        </section>
+                        {/* Content Card */}
+                        <div className={`flex-1 rounded-2xl p-5 border transition-all duration-300 ${actuallyReached
+                              ? 'bg-white dark:bg-[#151515] border-gray-100 dark:border-gray-800 shadow-soft hover:shadow-md'
+                              : 'bg-transparent border-transparent opacity-60 grayscale'
+                           }`}>
+                           <div className="flex justify-between items-start mb-2">
+                              <h3 className={`text-base font-bold font-serif ${actuallyReached ? 'text-text-main dark:text-white' : 'text-gray-400'}`}>
+                                 {milestone.title}
+                              </h3>
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${actuallyReached ? 'bg-gray-100 dark:bg-gray-800 text-gray-500' : 'text-gray-300'}`}>
+                                 Lv.{milestone.level}
+                              </span>
+                           </div>
 
-        {/* 4. Next Milestone */}
-        <section className="mt-12">
-           <div className="relative overflow-hidden rounded-[24px] bg-gradient-to-r from-gray-900 to-gray-800 p-6 text-white shadow-lg">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 rounded-full blur-[40px]"></div>
-              
-              <div className="flex items-center gap-4 relative z-10">
-                 <div className="size-12 rounded-full border border-white/20 bg-white/5 flex items-center justify-center">
-                    <Icon name="military_tech" className="text-2xl text-yellow-400" filled />
-                 </div>
-                 <div className="flex-1">
-                    <h4 className="font-bold font-display text-lg mb-1">Next: Master</h4>
-                    <p className="text-xs text-gray-400">Complete {Math.max(0, 10 - completedLessons.length)} more lessons.</p>
-                 </div>
-                 <button 
-                   onClick={() => navigate('/reading')}
-                   className="px-4 py-2 rounded-full bg-white text-black text-xs font-bold hover:bg-gray-100 transition-colors active:scale-95"
-                 >
-                    Go
-                 </button>
-              </div>
-           </div>
-        </section>
+                           <p className="text-sm text-gray-500 dark:text-gray-400 mb-3 leading-relaxed">
+                              {milestone.desc}
+                           </p>
 
-      </main>
-    </div>
-  );
+                           {actuallyReached && (
+                              <div className="relative pl-3 border-l-2 border-primary/30">
+                                 <p className="text-xs font-serif italic text-gray-400 dark:text-gray-500">
+                                    {milestone.quote}
+                                 </p>
+                              </div>
+                           )}
+                        </div>
+                     </div>
+                  );
+               })}
+            </div>
+
+            <div className="mt-12 text-center">
+               <p className="text-xs text-gray-400 font-serif italic">
+                  “人生的意义不在于终点，而在于沿途的风景与转变。”
+               </p>
+            </div>
+
+         </div>
+      </div>
+   );
 };

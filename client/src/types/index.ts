@@ -11,7 +11,7 @@ export interface User {
   progress: number; // 0-100
   currentDay: number;
   totalDays: number;
-  
+
   // v2.0 Commercialization Fields
   isVip?: boolean;
   vipExpireDate?: string; // ISO Date String
@@ -159,5 +159,36 @@ export interface ChatMessage {
   sources?: { uri: string; title: string }[];
   created_at?: string;
   // UI helpers
-  isTyping?: boolean; 
+  isTyping?: boolean;
+}
+
+// --- Multi-Session Types (晨读营多期支持) ---
+
+export interface Session {
+  id: string;
+  number: number; // 期数，如 1, 2, 3...
+  theme: string; // 主题，如 "改变之门"
+  subtitle: string; // 副标题，如 "开启与意愿"
+  startDate: string; // ISO Date
+  endDate?: string;
+  status: 'upcoming' | 'active' | 'completed';
+  chapters: Chapter[];
+}
+
+export interface SessionProgress {
+  sessionId: string;
+  sessionNumber: number;
+  sessionTheme: string;
+  completedLessons: string[];
+  totalLessons: number;
+  completedAt?: string; // ISO Date when completed
+  status: 'in_progress' | 'completed';
+}
+
+export interface UserStats {
+  totalSessions: number;
+  totalDays: number;
+  totalDiaries: number;
+  totalInsights: number;
+  currentStreak: number;
 }

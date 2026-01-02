@@ -1,227 +1,122 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query'; 
-import { Icon } from '@/components/ui/Icon';
-import { Image } from '@/components/ui/Image'; 
-import { Announcement, Partner } from '@/types';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { useHaptics } from '@/hooks/useHaptics';
 import { useAuth } from '@/contexts/AuthContext';
 import { useGamification } from '@/contexts/GamificationContext';
-import { useProfile } from '@/hooks/useProfile'; 
-import { usePartner } from '@/hooks/usePartner';
+import { useProfile } from '@/hooks/useProfile';
 import { useProgress } from '@/hooks/useProgress';
-import { useTranslation } from '@/hooks/useTranslation';
-import { DashboardHeader } from '@/components/business/dashboard/DashboardHeader';
-import { QuickActions } from '@/components/business/dashboard/QuickActions';
-import { Announcements } from '@/components/business/dashboard/Announcements';
+import { courseData } from '@/data/courseData';
+import { SageAvatar } from '@/components/sage/SageAvatar';
+import { SmartFeed } from '@/components/dashboard/SmartFeed';
 
-const announcementsData: Announcement[] = [
-  {
-    id: 'a1',
-    title: '晨间冥想',
-    content: '明早 6:30，不仅有答疑，我们还将一起进行5分钟的静心冥想。',
-    time: '10分钟前',
-    type: 'live',
-  },
-];
-
-const SkeletonLoader = () => (
-  <div className="animate-pulse flex flex-col gap-6 px-6 pt-20">
-      <div className="h-32 bg-gray-200 dark:bg-gray-800 rounded-[24px]"></div>
-      <div className="h-48 bg-gray-200 dark:bg-gray-800 rounded-[32px]"></div>
-      <div className="h-24 bg-gray-200 dark:bg-gray-800 rounded-3xl"></div>
-  </div>
-);
-
-const SocialTicker = () => {
-    const { t } = useTranslation();
-    
-    // Dynamic messages using translation templates
-    const msgs = [
-        t('dashboard.social_ticker.checkin', { name: 'Alex', day: 5 }),
-        t('dashboard.social_ticker.join', { name: 'Sarah' }),
-        t('dashboard.social_ticker.badge', { name: 'David', badge: '晨起鸟' }),
-        t('dashboard.social_ticker.focus', { name: 'Momo' })
-    ];
-    
-    const [idx, setIdx] = useState(0);
-    useEffect(() => {
-        const timer = setInterval(() => setIdx(i => (i + 1) % msgs.length), 4000);
-        return () => clearInterval(timer);
-    }, [msgs.length]);
-    return (
-        <div className="fixed bottom-[70px] md:bottom-[90px] left-0 right-0 flex justify-center pointer-events-none z-30">
-            <div className="bg-black/40 backdrop-blur-md px-3 py-1 rounded-full text-[10px] text-white/90 animate-fade-in transition-all duration-500 transform translate-y-0">
-               🔔 {msgs[idx]}
-            </div>
-        </div>
-    )
-}
+import { FeedCardProps } from '@/components/dashboard/FeedCard';
 
 export const Dashboard: React.FC = () => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
-  const { streak, coins } = useGamification(); 
-  const { trigger: haptic } = useHaptics();
-  const { t } = useTranslation();
-  
-  const { profile, isLoading: isProfileLoading } = useProfile();
-  const { partner: buddy } = usePartner('buddy');
-  const { completedLessons, isLoading: isProgressLoading } = useProgress();
-  
-  const [scrolled, setScrolled] = useState(false);
+    const navigate = useNavigate();
+    const { user } = useAuth();
+    const { profile } = useProfile();
+    const { completedLessons } = useProgress();
 
-  // Contextual Data for Background
-  const hour = new Date().getHours();
-  const isNight = hour >= 19 || hour < 5;
+    // Initial Data Loading
+    const totalDays = 22;
+    const currentDayNum = Math.min(completedLessons.length + 1, totalDays);
+    let currentLesson = null;
+    for (const chapter of courseData) {
+        const found = chapter.lessons.find(l => l.day === currentDayNum);
+        if (found) { currentLesson = found; break; }
+    }
+    if (!currentLesson && currentDayNum === 0) currentLesson = courseData[0].lessons[0];
 
-  // Calculate Progress
-  const totalDays = 21;
-  const currentProgress = Math.min(100, Math.round((completedLessons.length / totalDays) * 100));
+    // --- State: The Unified Feed ---
+    // We separate Pinned items from the Flow
+    const [pinnedItems, setPinnedItems] = useState<FeedCardProps[]>([]);
+    const [feedStream, setFeedStream] = useState<FeedCardProps[]>([]);
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    useEffect(() => {
+        // 1. Initialize Pinned Items (e.g., Today's Reading)
+        setPinnedItems([
+            {
+                type: 'reading',
+                isPinned: true,
+                title: currentLesson ? `Day ${currentDayNum}: ${currentLesson.title}` : 'All caught up!',
+                content: currentLesson?.points?.[0]?.title || 'Start your journey to independence.',
+                image: currentLesson?.image,
+                meta: `${currentLesson?.duration || '15 min'}`,
+                actionLabel: 'Start Session',
+                onClick: () => navigate(currentLesson ? `/course/${currentLesson.id}` : '/reading')
+            }
+        ]);
 
-  if ((isProfileLoading && !profile) || isProgressLoading) return <SkeletonLoader />;
+        // 2. Initialize Stream with Greeting & recent updates
+        const displayName = profile?.display_name || user?.email?.split('@')[0] || 'Friend';
+        const initialStream: FeedCardProps[] = [
 
-  return (
-    <div className={`pb-24 md:pb-32 animate-fade-in min-h-screen relative font-sans transition-colors duration-1000 ${isNight ? 'bg-[#0F1014] text-gray-200' : 'bg-[#F5F7F5] dark:bg-[#0A0A0A]'}`}>
-      
-      <SocialTicker />
+            // --- Growth ---
+            { type: 'system', title: '📢 每日晨读分享', content: 'Day 1 金句：积极主动不仅是指行事态度，更意味着人一定要对自己的人生负责。', image: 'https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80', meta: '07:00' },
+            { type: 'system', title: '🔒 课程解锁', content: '恭喜！你已完成基础篇，【公众成功】模块已为你解锁。', icon: 'lock_open', meta: '07:30' },
+            { type: 'summary', title: '💡 学习摘要', content: 'Sage 为你总结了今天的要点：1. 刺激与回应之间有选择权 2. 也是自我意识的觉醒。', meta: '07:45' },
+            { type: 'system', title: '🧠 间隔复习', content: '还记得 3 天前学习的“情感账户”概念吗？试着说出它的定义。', icon: 'history_edu', meta: '08:00' },
 
-      {/* 1. Mist & Glimmer Background (Dynamic based on time) */}
-      <div className="absolute top-0 left-0 right-0 h-[500px] pointer-events-none z-0 overflow-hidden">
-          <div className={`absolute top-[-20%] right-[-10%] w-[400px] h-[400px] rounded-full blur-[100px] opacity-60 transition-colors duration-1000 ${isNight ? 'bg-indigo-900/20' : 'bg-primary/10'}`}></div>
-          <div className={`absolute top-[10%] left-[-10%] w-[300px] h-[300px] rounded-full blur-[80px] opacity-40 transition-colors duration-1000 ${isNight ? 'bg-purple-900/20' : 'bg-accent/5'}`}></div>
-      </div>
+            // --- Awareness ---
+            { type: 'reflection', title: '📝 每日一问', content: '今天哪件事让你感到最有掌控感？', icon: 'help_outline', meta: '每日Prompt', actionLabel: '写日记' },
+            { type: 'system', title: '🔋 能量检视', content: '此刻你的能量状态是多少？(0-100)', icon: 'battery_full', meta: '轻交互', actionLabel: '记录' },
+            { type: 'reflection', title: '🕰️ 那年今日', content: '上个月的今天，你写下：“我想成为一个更耐心的人。”', icon: 'history', meta: '回顾' },
+            { type: 'system', title: '💧 微习惯', content: '早起一杯水，滋润身心。', icon: 'water_drop', meta: '提醒' },
+            { type: 'system', title: '🧘 呼吸时刻', content: '监测到你似乎有些焦躁，来做 1 分钟深呼吸吧。', icon: 'self_improvement', meta: 'AI 感知' },
 
-      {/* Header */}
-      <DashboardHeader 
-        scrolled={scrolled}
-        isNight={isNight}
-        profile={profile}
-        user={user}
-        coins={coins}
-        buddy={buddy || null}
-      />
+            // --- Connect ---
+            { type: 'partner', title: '👫 Bookmate Update', content: 'Sarah 刚刚完成了 Day 5 的修习。', meta: '10:00', icon: 'check_circle' },
+            { type: 'partner', title: '🤝 共鸣通知', content: 'David 划线了你日记中关于“自由”的段落。', meta: '10:30', icon: 'format_quote' },
+            { type: 'partner', title: '❤️ 伙伴能量', content: '你的伙伴 Ben 今天能量较低，送个抱抱鼓励一下？', meta: '关怀提醒', actionLabel: 'Send Hug' },
+            { type: 'partner', title: '🔥 社区精选', content: '“我们无法改变风向，但可以调整风帆。” —— 来自社区热帖', meta: '每日精选' },
+            { type: 'partner', title: '👋 结伴邀请', content: '有一个新成员希望能成为你的晨读搭子，共同进步。', meta: '新消息', actionLabel: '查看' },
 
-      {/* Main Content Grid for Desktop */}
-      <div className="md:grid md:grid-cols-2 md:gap-6 md:px-6">
-        
-        {/* Left Column */}
-        <div className="space-y-6">
-            {/* 2. Zen Quote - "Parchment" Style */}
-            <div className="px-6 md:px-0 mt-4 relative z-10">
-                <div className="relative bg-[#FFFDF9] dark:bg-[#151515] p-8 rounded-[24px] shadow-[0_8px_30px_rgba(0,0,0,0.03)] border border-stone-100 dark:border-stone-800 overflow-hidden group hover:shadow-[0_8px_40px_rgba(212,163,115,0.1)] transition-all duration-500">
-                {/* Subtle Texture */}
-                <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] mix-blend-multiply dark:mix-blend-overlay"></div>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-accent/10 to-transparent rounded-bl-full opacity-60 transition-opacity group-hover:opacity-100"></div>
-                
-                <Icon name="format_quote" className="text-accent/60 text-5xl absolute top-6 left-6" />
-                
-                <div className="relative z-10 text-center mt-4">
-                    <p className="text-lg md:text-xl text-text-main dark:text-gray-200 font-display leading-loose italic opacity-90">
-                    "{t('dashboard.zen_quote.content')}"
-                    </p>
-                    <div className="flex items-center justify-center gap-4 mt-8">
-                    <div className="h-[1px] w-12 bg-accent/40"></div>
-                    <p className="text-[10px] text-text-sub font-bold tracking-[0.2em] uppercase text-accent">{t('dashboard.zen_quote.author')}</p>
-                    <div className="h-[1px] w-12 bg-accent/40"></div>
-                    </div>
-                </div>
-                </div>
+            // --- Sage ---
+            { type: 'chat-ai', content: 'Good morning! 根据今天的天气，是个适合去公园晨读的好日子。' },
+            { type: 'insight', title: '✨ AI 洞察', content: '通过分析你上周的日记，我发现通过分析你上周的日记，我发现你周日晚上总是容易感到焦虑。', meta: '深度分析' },
+            { type: 'feedback', title: '👏 夸夸卡', content: '连续 7 天完成晨读，你的毅力超过了 90% 的用户！', meta: '成就', icon: 'celebration' },
+            { type: 'system', title: '⏰ 温柔提醒', content: '今天还没晨读哦，只需要 15 分钟即可完成。', icon: 'schedule', meta: '提醒' },
+
+            // --- System ---
+            { type: 'reward', title: '🏅 获得勋章', content: '解锁【早起鸟】徽章！继续保持。', meta: '成就' },
+            { type: 'summary', title: '📊 周报推送', content: '本周你的专注时长：5 小时，阅读了 3 个章节。', meta: '周报', icon: 'analytics' },
+        ];
+        setFeedStream(initialStream.reverse());
+    }, [profile, user, currentLesson, currentDayNum, navigate]);
+
+
+
+    return (
+        <div className="min-h-screen bg-transparent dark:bg-[#0A0A0A] font-sans pb-32 relative">
+
+            {/* Top Bar for Sage Identity */}
+            <div className="sticky top-0 z-40 bg-white/60 dark:bg-black/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 px-6 py-3 flex items-center gap-3">
+                <SageAvatar size="sm" />
+                <span className="font-bold text-text-main dark:text-white text-sm">Sage Agent</span>
             </div>
 
-            {/* 3. Hero Task - "Deep Focus" Card */}
-            <div className="px-6 md:px-0 mt-10 md:mt-0 relative z-10">
-                <div className="flex justify-between items-end mb-5 px-2">
-                <h3 className="text-text-main dark:text-white text-lg font-bold font-display flex items-center gap-2">
-                    {t('dashboard.todays_practice')}
-                </h3>
-                <span className="text-[10px] font-bold text-gray-400 tracking-wide uppercase">{t('dashboard.practice_time')}</span>
+            <div className="max-w-md mx-auto px-6 pt-6">
+
+                {/* 1. Pinned Section */}
+                <div className="mb-8">
+                    <SmartFeed items={pinnedItems} />
                 </div>
-                
-                <div 
-                onClick={() => { haptic('light'); navigate('/course/1'); }}
-                className="group relative w-full aspect-[16/9] md:aspect-[2/1] rounded-[32px] overflow-hidden shadow-xl shadow-primary/10 cursor-pointer transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1"
-                >
-                <div className="absolute inset-0 bg-gray-900">
-                    <Image 
-                        src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000&auto=format&fit=crop"
-                        className="w-full h-full object-cover opacity-80 transition-transform duration-[5s] group-hover:scale-105"
-                        alt="Course Cover"
-                        priority={true} // High Priority for LCP
-                    />
-                </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0A1F1F] via-[#0A1F1F]/40 to-transparent opacity-90"></div>
-                    
-                    {/* Content */}
-                    <div className="absolute inset-0 p-8 flex flex-col justify-between">
-                    <div className="flex justify-between items-start">
-                        <span className="px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-[10px] text-white font-bold tracking-widest uppercase">
-                            {t('dashboard.hero_course.tag')}
-                        </span>
-                        {/* Play Button - Subtle */}
-                        <div className="size-10 rounded-full border border-white/30 flex items-center justify-center text-white bg-white/5 backdrop-blur-sm group-hover:bg-white group-hover:text-primary transition-all duration-300">
-                            <Icon name="play_arrow" className="text-xl" filled />
-                        </div>
+
+                {/* 2. Dynamic Stream */}
+                <div className="space-y-6 min-h-[40vh]">
+                    {/* Stream Header */}
+                    <div className="flex items-center gap-4 mb-6 opacity-30">
+                        <div className="h-px flex-1 bg-black dark:bg-white"></div>
+                        <span className="text-xs font-bold uppercase tracking-widest">Live Feed</span>
+                        <div className="h-px flex-1 bg-black dark:bg-white"></div>
                     </div>
 
-                    <div>
-                        <h4 className="text-2xl text-white font-display font-bold tracking-wide mb-2 text-shadow-sm">{t('dashboard.hero_course.title')}</h4>
-                        <div className="flex items-center gap-3">
-                            <div className="h-1 w-12 bg-primary rounded-full"></div>
-                            <p className="text-gray-300 text-xs font-medium tracking-wide">{t('dashboard.hero_course.subtitle')}</p>
-                        </div>
-                    </div>
-                    </div>
+                    <SmartFeed items={feedStream} />
                 </div>
+
             </div>
+
+
+
         </div>
-
-        {/* Right Column */}
-        <div className="space-y-6">
-            {/* Progress Card */}
-            <div className="px-6 md:px-0 mt-10 md:mt-4 relative z-10">
-                <div className="bg-white dark:bg-[#151515] rounded-3xl p-6 border border-gray-50 dark:border-gray-800 shadow-sm">
-                <div className="flex justify-between items-center mb-4">
-                    <div>
-                        <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">{t('dashboard.streak_title')}</span>
-                        <p className="text-2xl font-display font-bold text-text-main dark:text-white mt-1">Day {streak} <span className="text-sm text-gray-300 font-sans font-normal">/ {totalDays}</span></p>
-                    </div>
-                    
-                    {/* Circular Progress */}
-                    <div className="relative size-12 flex items-center justify-center">
-                        <svg className="absolute inset-0 -rotate-90" viewBox="0 0 36 36">
-                            <path className="text-gray-100 dark:text-gray-800" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3" />
-                            <path className="text-primary" strokeDasharray={`${currentProgress}, 100`} d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-                        </svg>
-                        <span className="text-[10px] font-bold text-primary">{currentProgress}%</span>
-                    </div>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Icon name="local_fire_department" className="text-orange-400 text-sm" />
-                    <p className="text-text-sub dark:text-gray-400 text-xs" dangerouslySetInnerHTML={{ __html: t('dashboard.streak_desc', { days: streak }) }}></p>
-                </div>
-                </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="px-6 md:px-0 mt-8 md:mt-0 relative z-10">
-                <QuickActions />
-            </div>
-
-            {/* Announcements */}
-            <div className="px-6 md:px-0 mt-10 md:mt-6 mb-6">
-                <Announcements data={announcementsData} />
-            </div>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };

@@ -12,7 +12,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 
 export const Login: React.FC = () => {
   const navigate = useNavigate();
-  const { isAuthenticated, refreshUser } = useAuth();
+  const { isAuthenticated, refreshUser, loginAsGuest, loginAsDev } = useAuth();
   const { showToast } = useToast();
   const { t } = useTranslation();
 
@@ -64,12 +64,12 @@ export const Login: React.FC = () => {
       showToast(t("login.toast.code_sent"), "success");
     } catch (error: any) {
       console.error("[Debug] SendCode Error Object:", error);
-      
+
       // 1. Try to extract from UniAuth standard error structure
-      let apiError = error?.response?.data?.error?.message 
-                  || error?.response?.data?.message 
-                  || error?.message;
-      
+      let apiError = error?.response?.data?.error?.message
+        || error?.response?.data?.message
+        || error?.message;
+
       // 2. Fallback for non-response errors
       if (!apiError && typeof error === 'string') apiError = error;
 
@@ -289,15 +289,35 @@ export const Login: React.FC = () => {
           </label>
         </div>
 
+        {/* Guest Mode Button */}
         <Button
           variant="ghost"
           size="sm"
           fullWidth
-          onClick={() => navigate("/")}
+          onClick={() => {
+            loginAsGuest();
+            navigate("/");
+          }}
           className="mt-8 text-xs text-gray-300 hover:text-primary"
         >
           {t("login.btn.guest")} &rarr;
         </Button>
+
+        {/* Dev Test Account (Development Only) */}
+        {import.meta.env.DEV && (
+          <Button
+            variant="outline"
+            size="sm"
+            fullWidth
+            onClick={() => {
+              loginAsDev();
+              navigate("/");
+            }}
+            className="mt-2 text-xs border-amber-500/50 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20"
+          >
+            🔧 开发测试账号（无需验证）
+          </Button>
+        )}
       </div>
       <style>{`@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }`}</style>
     </div>

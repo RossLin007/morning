@@ -1,0 +1,15 @@
+port: 8317
+remote-management:
+  allow-remote: true
+  secret-key: "AasdfoqwiernzA234"
+  disable-control-panel: false
+auth-dir: "/data/auths"
+debug: false
+logging-to-file: false
+usage-statistics-enabled: false
+request-retry: 3
+quota-exceeded:
+   switch-project: true
+   switch-preview-model: true
+api-keys:
+  - "EFaaSDFG80ak78"

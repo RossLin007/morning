@@ -18,6 +18,11 @@ export const useProgress = () => {
             return api.progress.get();
         },
         enabled: !!user,
+        initialData: () => {
+            const local = localStorage.getItem(PROGRESS_KEY);
+            return local ? JSON.parse(local) : [];
+        },
+        staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
     // 2. Sync Mutation
@@ -32,7 +37,7 @@ export const useProgress = () => {
     const updateProgress = useCallback(async (lessonIds: string[]) => {
         // Update LocalStorage for immediate feedback
         localStorage.setItem(PROGRESS_KEY, JSON.stringify(lessonIds));
-        
+
         // Sync to Backend
         if (user) {
             await syncMutation.mutateAsync(lessonIds);
@@ -61,6 +66,9 @@ export const useProgress = () => {
         completedLessons: remoteProgress,
         isLoading,
         completeLesson,
-        updateProgress
+        updateProgress,
+        // Alias for compatibility
+        markLessonComplete: completeLesson,
+        isLessonCompleted: (lessonId: string) => remoteProgress.includes(lessonId)
     };
 };
