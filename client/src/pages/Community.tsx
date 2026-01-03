@@ -38,10 +38,10 @@ const Community: React.FC = () => {
     return (
         <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#0A0A0A] pb-24 font-sans">
             {/* Header */}
-            {/* Header (Native Style) */}
-            <header className="fixed top-0 left-0 right-0 z-40 h-[44px] bg-[#EDEDED] dark:bg-[#111] border-b border-[#D5D5D5] dark:border-gray-800 transition-all">
+            {/* Header (Native Style - extends into safe-area for PWA) */}
+            <header className="fixed top-0 left-0 right-0 z-40 pt-safe bg-[#EDEDED] dark:bg-[#111] transition-all">
                 {!isSearching ? (
-                    <div className="relative h-full flex items-center justify-center px-4">
+                    <div className="relative h-[44px] flex items-center justify-center px-4">
                         <h1 className="text-[17px] font-medium text-black dark:text-white tracking-wide">书友</h1>
                         <button
                             onClick={() => setIsSearching(true)}

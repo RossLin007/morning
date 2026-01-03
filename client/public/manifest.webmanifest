@@ -1,0 +1,44 @@
+{
+  "id": "/",
+  "name": "凡人晨读",
+  "short_name": "晨读",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#6B8E8E",
+  "theme_color": "#EDEDED",
+  "orientation": "portrait-primary",
+  "description": "融合正念、游戏化与AI的习惯养成共修社区。",
+  "categories": [
+    "education",
+    "lifestyle",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "pwa-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "pwa-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "今日晨读",
+      "url": "/reading",
+      "icons": [
+        {
+          "src": "pwa-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}

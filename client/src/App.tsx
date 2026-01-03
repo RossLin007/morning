@@ -57,7 +57,7 @@ const AppContent: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F2F2EF] dark:bg-[#050505] flex justify-center items-start md:py-8 transition-colors duration-500 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] dark:bg-none bg-fixed">
-      <div className="w-full sm:max-w-md md:max-w-2xl lg:max-w-4xl bg-background-light dark:bg-background-dark min-h-screen md:min-h-[90vh] md:rounded-[40px] md:border-[8px] md:border-white/20 dark:md:border-gray-800/20 shadow-2xl relative overflow-x-hidden overflow-y-auto no-scrollbar ring-1 ring-black/5 flex flex-col">
+      <div className="w-full sm:max-w-md md:max-w-2xl lg:max-w-4xl bg-background-light dark:bg-background-dark min-h-screen md:min-h-[90vh] md:rounded-[40px] md:border-[8px] md:border-white/20 dark:md:border-gray-800/20 shadow-2xl relative overflow-x-hidden overflow-y-auto no-scrollbar flex flex-col">
         <PWAInstallBanner />
         <RewardsOverlay />
         <ScrollToTop />

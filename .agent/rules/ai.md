@@ -2,7 +2,6 @@
 trigger: always_on
 ---
 
-
 # Code Developer Guide - Morning Reader (凡人晨读)
 
 ## 1. Project Overview & Mission

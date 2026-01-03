@@ -38,9 +38,9 @@ export const Profile: React.FC = () => {
   const { profile } = useProfile();
   const [showSoulCard, setShowSoulCard] = useState(false);
 
-  // Set PWA status bar color to match page background
+  // Set PWA status bar color to match top header card (white)
   const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  useThemeColor(isDark ? '#111111' : '#F0F2F5');
+  useThemeColor(isDark ? '#191919' : '#FFFFFF');
 
   const DEFAULT_AVATAR = "https://api.dicebear.com/7.x/avataaars/svg?seed=Morning";
   // Fallback safe access

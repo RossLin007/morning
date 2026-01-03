@@ -23,9 +23,11 @@ export const Reading: React.FC = () => {
     return (
         <div className="min-h-screen bg-white dark:bg-[#111] font-sans pb-24">
 
-            {/* 1. Header (Native WeChat Style) */}
-            <header className="fixed top-0 left-0 right-0 z-40 h-[44px] flex items-center justify-center bg-[#EDEDED] dark:bg-[#111] border-b border-[#D5D5D5] dark:border-gray-800 transition-transform">
-                <h1 className="text-[17px] font-medium text-black dark:text-white tracking-wide">晨读</h1>
+            {/* 1. Header (Native Style - extends into safe-area) */}
+            <header className="fixed top-0 left-0 right-0 z-40 pt-safe bg-[#EDEDED] dark:bg-[#111] transition-transform">
+                <div className="h-[44px] flex items-center justify-center">
+                    <h1 className="text-[17px] font-medium text-black dark:text-white tracking-wide">晨读</h1>
+                </div>
             </header>
 
             <div className="pt-[44px] pb-2">

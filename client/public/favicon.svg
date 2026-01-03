@@ -1,6 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#6B8E8E"/>
-  <path d="M8 22C8 20 10 19 16 19C22 19 24 20 24 22V24H8V22Z" fill="white" opacity="0.6"/>
-  <circle cx="16" cy="14" r="5" fill="white"/>
-  <path d="M10 24H22" stroke="white" stroke-width="2" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background: Sage Green (Brand Color) -->
+  <rect width="512" height="512" rx="96" fill="#6B8E8E"/>
+  
+  <!-- Minimalist Book Icon -->
+  <g transform="translate(128, 140)">
+    <!-- Left page -->
+    <path d="M128 0 C80 10, 40 30, 0 60 L0 220 C40 190, 80 175, 128 170 Z" fill="white" opacity="0.9"/>
+    <!-- Right page -->
+    <path d="M128 0 C176 10, 216 30, 256 60 L256 220 C216 190, 176 175, 128 170 Z" fill="white" opacity="0.7"/>
+    <!-- Center spine -->
+    <line x1="128" y1="0" x2="128" y2="170" stroke="white" stroke-width="3" opacity="0.5"/>
+  </g>
+  
+  <!-- Sunrise/Morning element - subtle arc at bottom -->
+  <circle cx="256" cy="480" r="60" fill="white" opacity="0.15"/>
 </svg>

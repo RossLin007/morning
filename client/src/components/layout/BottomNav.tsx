@@ -17,7 +17,7 @@ export const BottomNav: React.FC = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none md:bottom-8">
-      <div className="bg-[#F7F7F7] dark:bg-[#111] border-t-[0.5px] border-[#D5D5D5] dark:border-gray-800 pb-safe w-full sm:max-w-md md:max-w-2xl lg:max-w-4xl pointer-events-auto md:rounded-b-[32px] transition-all duration-300">
+      <div className="bg-[#F7F7F7] dark:bg-[#111] pb-safe w-full sm:max-w-md md:max-w-2xl lg:max-w-4xl pointer-events-auto md:rounded-b-[32px] transition-all duration-300">
         <div className="flex justify-around items-center h-[60px]">
           {navItems.map((item, index) => (
             <React.Fragment key={item.path}>

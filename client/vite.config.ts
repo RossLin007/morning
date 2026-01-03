@@ -24,6 +24,12 @@ export default defineConfig({
         rewrite: (p) => p.replace(/^\/api/, "/api"),
       },
     },
+    allowedHosts: [
+      'morning.829525.xyz',
+      // 如果您需要，可以添加更多域名，例如：
+      // 'localhost',
+      // '127.0.0.1'
+    ],
   },
   plugins: [react()],
   resolve: {
