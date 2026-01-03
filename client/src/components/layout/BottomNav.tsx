@@ -17,27 +17,26 @@ export const BottomNav: React.FC = () => {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none md:bottom-8">
-      <div className="bg-white/90 dark:bg-surface-dark/90 backdrop-blur-xl border-t md:border border-gray-100 dark:border-gray-800 pb-safe pt-2 px-2 w-full sm:max-w-md md:max-w-2xl lg:max-w-4xl pointer-events-auto md:rounded-b-[32px] transition-all duration-300">
-        <div className="flex justify-around items-center h-14 pb-2">
+      <div className="bg-[#F7F7F7] dark:bg-[#111] border-t-[0.5px] border-[#D5D5D5] dark:border-gray-800 pb-safe w-full sm:max-w-md md:max-w-2xl lg:max-w-4xl pointer-events-auto md:rounded-b-[32px] transition-all duration-300">
+        <div className="flex justify-around items-center h-[60px]">
           {navItems.map((item, index) => (
             <React.Fragment key={item.path}>
               {index === 2 && <div className="w-16 flex-shrink-0" />}
               <button
                 onClick={() => navigate(item.path)}
-                className={`flex flex-col items-center justify-center w-full h-full gap-1 group ${isActive(item.path) ? 'text-primary' : 'text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'
+                className={`flex flex-col items-center justify-center w-full h-full gap-0 group ${isActive(item.path)
+                  ? 'text-[#07C160]'
+                  : 'text-[#181818] dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'
                   }`}
               >
                 <div className="relative">
                   <Icon
                     name={item.icon}
                     filled={isActive(item.path)}
-                    className={`text-[26px] transition-transform ${isActive(item.path) ? 'scale-110' : 'group-hover:scale-105'}`}
+                    className="text-[29px]"
                   />
-                  {item.path === '/community' && (
-                    <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-surface-dark"></span>
-                  )}
                 </div>
-                <span className="text-[10px] font-medium">{item.name}</span>
+                <span className="text-[12px] font-medium">{item.name}</span>
               </button>
             </React.Fragment>
           ))}

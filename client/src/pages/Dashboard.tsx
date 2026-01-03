@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useGamification } from '@/contexts/GamificationContext';
 import { useProfile } from '@/hooks/useProfile';
 import { useProgress } from '@/hooks/useProgress';
+import { useThemeColor } from '@/hooks/useThemeColor';
 import { courseData } from '@/data/courseData';
 import { SageAvatar } from '@/components/sage/SageAvatar';
 import { SmartFeed } from '@/components/dashboard/SmartFeed';
@@ -15,6 +16,10 @@ export const Dashboard: React.FC = () => {
     const { user } = useAuth();
     const { profile } = useProfile();
     const { completedLessons } = useProgress();
+
+    // Set PWA status bar color to match Native Header
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    useThemeColor(isDark ? '#111111' : '#EDEDED');
 
     // Initial Data Loading
     const totalDays = 22;
@@ -88,34 +93,31 @@ export const Dashboard: React.FC = () => {
     return (
         <div className="min-h-screen bg-transparent dark:bg-[#0A0A0A] font-sans pb-32 relative">
 
-            {/* Top Bar for Sage Identity */}
-            <div className="sticky top-0 z-40 bg-white/60 dark:bg-black/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 px-6 py-3 flex items-center gap-3">
-                <SageAvatar size="sm" />
-                <span className="font-bold text-text-main dark:text-white text-sm">Sage Agent</span>
-            </div>
+            {/* Top Bar for Sage Identity (Native Header) */}
+            <header className="fixed top-0 left-0 right-0 z-40 h-[44px] flex items-center justify-center bg-[#EDEDED] dark:bg-[#111] border-b border-[#D5D5D5] dark:border-gray-800">
+                <h1 className="text-[17px] font-medium text-black dark:text-white tracking-wide">Sage Agent</h1>
+            </header>
 
-            <div className="max-w-md mx-auto px-6 pt-6">
+            <div className="max-w-md mx-auto px-6 pt-[68px]">
 
                 {/* 1. Pinned Section */}
                 <div className="mb-8">
                     <SmartFeed items={pinnedItems} />
                 </div>
-
-                {/* 2. Dynamic Stream */}
-                <div className="space-y-6 min-h-[40vh]">
-                    {/* Stream Header */}
-                    <div className="flex items-center gap-4 mb-6 opacity-30">
-                        <div className="h-px flex-1 bg-black dark:bg-white"></div>
-                        <span className="text-xs font-bold uppercase tracking-widest">Live Feed</span>
-                        <div className="h-px flex-1 bg-black dark:bg-white"></div>
-                    </div>
-
-                    <SmartFeed items={feedStream} />
-                </div>
-
+                {/* ... */}
             </div>
 
+            {/* 2. Dynamic Stream */}
+            <div className="space-y-6 min-h-[40vh]">
+                {/* Stream Header */}
+                <div className="flex items-center gap-4 mb-6 opacity-30">
+                    <div className="h-px flex-1 bg-black dark:bg-white"></div>
+                    <span className="text-xs font-bold uppercase tracking-widest">Live Feed</span>
+                    <div className="h-px flex-1 bg-black dark:bg-white"></div>
+                </div>
 
+                <SmartFeed items={feedStream} />
+            </div>
 
         </div>
     );

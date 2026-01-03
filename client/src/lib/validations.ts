@@ -13,7 +13,14 @@ export const passwordLoginSchema = z.object({
 
 export const profileSchema = z.object({
   name: z.string().min(1, "昵称不能为空").max(12, "昵称不能超过12个字符"),
-  bio: z.string().max(50, "个性签名不能超过50个字符").optional(),
+  bio: z.string().max(50, "一句话介绍不能超过50个字符").optional(),
+  title: z.string().max(10, "标签不能超过10个字符").optional(),
+
+  // Soul Passport Fields
+  vision: z.string().max(100, "愿景描述请精简在100字以内").optional(),
+  mission: z.string().max(100, "使命描述请精简在100字以内").optional(),
+  current_issue: z.string().max(50, "当前课题请控制在50字以内").optional(),
+  energy_level: z.number().min(0).max(100).optional(),
 });
 
 export const noteSchema = z.object({

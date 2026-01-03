@@ -21,7 +21,19 @@ module.exports = {
             },
             fontFamily: {
                 "display": ["Noto Serif SC", "serif"],
-                "body": ["Noto Sans SC", "Lexend", "sans-serif"],
+                "body": [
+                    "-apple-system",
+                    "BlinkMacSystemFont",
+                    "San Francisco",
+                    "Helvetica Neue",
+                    "PingFang SC",
+                    "Hiragino Sans GB",
+                    "Microsoft YaHei",
+                    "Noto Sans CJK SC",
+                    "WenQuanYi Micro Hei",
+                    "Arial",
+                    "sans-serif"
+                ],
             },
             boxShadow: {
                 'soft': '0 8px 30px -4px rgba(107, 142, 142, 0.1)',

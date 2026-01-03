@@ -44,76 +44,75 @@ export const MyReading: React.FC = () => {
     const completedCourses = SEASONS.filter(s => s.status === 'completed');
 
     return (
-        <div className="min-h-screen bg-[#F9F9F9] dark:bg-[#0A0A0A] font-sans animate-fade-in pb-12 transition-colors duration-500">
+        <div className="min-h-screen bg-[#F9F9F9] dark:bg-[#0A0A0A] font-sans pb-24">
 
             {/* Header */}
             <header className="sticky top-0 z-50 px-6 py-4 flex items-center justify-between bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
                 <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-                    <Icon name="arrow_back" className="text-text-main dark:text-white" />
+                    <Icon name="arrow_back" className="text-gray-600 dark:text-gray-300" />
                 </button>
-                <h1 className="text-lg font-serif font-bold text-text-main dark:text-white">我的晨读</h1>
+                <h1 className="text-lg font-serif font-bold text-gray-800 dark:text-white">我的晨读</h1>
                 <div className="w-10"></div>
             </header>
 
             <div className="p-6 max-w-lg mx-auto">
 
                 {/* Tabs */}
-                <div className="flex bg-gray-100 dark:bg-gray-900 p-1 rounded-xl mb-6">
-                    <button
-                        onClick={() => setActiveTab('ongoing')}
-                        className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'ongoing' ? 'bg-white dark:bg-[#151515] text-text-main dark:text-white shadow-sm' : 'text-gray-400'}`}
-                    >
-                        正在修习
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('completed')}
-                        className={`flex-1 py-2 text-xs font-bold rounded-lg transition-all ${activeTab === 'completed' ? 'bg-white dark:bg-[#151515] text-text-main dark:text-white shadow-sm' : 'text-gray-400'}`}
-                    >
-                        已结业
-                    </button>
+                <div className="flex p-1 bg-gray-100 dark:bg-[#151515] rounded-xl mb-8">
+                    {['ongoing', 'completed'].map((tab) => (
+                        <button
+                            key={tab}
+                            onClick={() => setActiveTab(tab as any)}
+                            className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all ${activeTab === tab
+                                    ? 'bg-white dark:bg-[#252525] text-emerald-600 dark:text-emerald-400 shadow-sm'
+                                    : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                                }`}
+                        >
+                            {tab === 'ongoing' ? '正在修习' : '已结业'}
+                        </button>
+                    ))}
                 </div>
 
-                <div className="space-y-4">
+                <div className="space-y-6">
                     {activeTab === 'ongoing' ? (
-                        ongoingCourses.map(course => (
-                            <div key={course.id} onClick={() => navigate('/reading')} className="bg-white dark:bg-[#151515] rounded-2xl p-4 shadow-soft border border-gray-100 dark:border-gray-800 flex gap-4 cursor-pointer hover:shadow-md transition-all group">
-                                <div className="w-20 h-28 shrink-0 rounded-lg overflow-hidden shadow-sm relative">
-                                    <img src={course.cover} alt={course.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-                                    <div className="absolute inset-0 bg-black/10"></div>
-                                </div>
-                                <div className="flex-1 flex flex-col justify-between py-1">
-                                    <div>
-                                        <span className="text-[10px] font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full mb-2 inline-block">Current Season</span>
-                                        <h3 className="font-bold text-base text-text-main dark:text-white leading-tight mb-1">{course.title.split('：')[1]}</h3>
-                                        <p className="text-xs text-gray-400">{course.author}</p>
+                        ongoingCourses.map(course => {
+                            const progress = Math.floor((completedLessons.length / course.totalDays) * 100);
+                            return (
+                                <div
+                                    key={course.id}
+                                    onClick={() => navigate('/reading')}
+                                    className="group bg-white dark:bg-[#151515] rounded-3xl p-5 shadow-sm hover:shadow-md border border-gray-100 dark:border-gray-800 flex gap-5 cursor-pointer transition-all"
+                                >
+                                    <div className="w-20 h-28 shrink-0 rounded-xl overflow-hidden shadow-sm relative bg-gray-100">
+                                        <img src={course.cover} alt={course.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                     </div>
+                                    <div className="flex-1 flex flex-col justify-center py-1">
+                                        <h3 className="font-serif font-bold text-lg text-gray-800 dark:text-white leading-tight mb-1">
+                                            {course.title.split('：')[1]}
+                                        </h3>
+                                        <p className="text-xs text-gray-400 mb-5">{course.author}</p>
 
-                                    <div>
-                                        <div className="flex justify-between items-end mb-1">
-                                            <span className="text-[10px] text-gray-400">Progress</span>
-                                            <span className="text-xs font-bold text-text-main dark:text-white">{Math.floor((completedLessons.length / course.totalDays) * 100)}%</span>
-                                        </div>
+                                        {/* Progress Bar */}
                                         <div className="w-full h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-                                            <div style={{ width: `${(completedLessons.length / course.totalDays) * 100}%` }} className="h-full bg-primary rounded-full"></div>
+                                            <div style={{ width: `${progress}%` }} className="h-full bg-emerald-500 rounded-full"></div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))
+                            );
+                        })
                     ) : (
                         completedCourses.map(course => (
-                            <div key={course.id} className="bg-white dark:bg-[#151515] rounded-2xl p-4 shadow-soft border border-gray-100 dark:border-gray-800 flex gap-4 opacity-80 hover:opacity-100 transition-opacity">
-                                <div className="w-16 h-20 shrink-0 rounded-lg overflow-hidden shadow-sm grayscale hover:grayscale-0 transition-all">
+                            <div key={course.id} className="group flex items-center gap-5 p-4 rounded-3xl hover:bg-white dark:hover:bg-[#151515] transition-colors cursor-default">
+                                <div className="w-16 h-20 shrink-0 rounded-lg overflow-hidden shadow-sm grayscale group-hover:grayscale-0 transition-all duration-500 opacity-70 group-hover:opacity-100">
                                     <img src={course.cover} alt={course.title} className="w-full h-full object-cover" />
                                 </div>
-                                <div className="flex-1 flex flex-col justify-center">
-                                    <h3 className="font-bold text-sm text-text-main dark:text-white leading-tight mb-1">{course.title}</h3>
-                                    <p className="text-xs text-gray-400 mb-2">{course.author}</p>
-                                    <div className="flex items-center gap-1 text-green-600 bg-green-50 dark:bg-green-900/20 w-fit px-2 py-0.5 rounded text-[10px] font-bold">
-                                        <Icon name="check_circle" className="text-xs" />
-                                        <span>Completed</span>
-                                    </div>
+                                <div className="flex-1">
+                                    <h3 className="font-bold text-base text-gray-400 group-hover:text-gray-800 dark:group-hover:text-white transition-colors mb-1">
+                                        {course.title.split('：')[1]}
+                                    </h3>
+                                    <p className="text-xs text-gray-300 group-hover:text-gray-500 transition-colors">{course.author}</p>
                                 </div>
+                                <Icon name="check_circle" className="text-gray-200 group-hover:text-emerald-500 transition-colors text-xl" />
                             </div>
                         ))
                     )}

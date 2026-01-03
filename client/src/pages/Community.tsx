@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
+import { useThemeColor } from '@/hooks/useThemeColor';
 
 // Mock Classmates Data
 const CLASSMATES = [
@@ -22,6 +23,11 @@ const CLASSMATES = [
 const Community: React.FC = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState('');
+    const [isSearching, setIsSearching] = useState(false);
+
+    // Set PWA status bar color to match Native Header
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    useThemeColor(isDark ? '#111111' : '#EDEDED');
 
     const filteredClassmates = CLASSMATES.filter(c =>
         c.name.includes(searchTerm) || c.bio.includes(searchTerm) || c.term.includes(searchTerm)
@@ -32,47 +38,63 @@ const Community: React.FC = () => {
     return (
         <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#0A0A0A] pb-24 font-sans">
             {/* Header */}
-            <header className="sticky top-0 z-40 px-6 py-4 bg-[#FDFDFD]/90 dark:bg-[#0A0A0A]/90 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
-                <div className="flex items-center justify-between mb-4">
-                    <h1 className="text-2xl font-serif font-bold text-text-main dark:text-white">书友通讯录</h1>
-                    <span className="text-xs font-bold text-[#6B8E8E] bg-[#E8F2F2] dark:bg-[#1C2C2C] px-3 py-1 rounded-full">
-                        共 {CLASSMATES.length} 位书友
-                    </span>
-                </div>
-
-                {/* Search Bar */}
-                <div className="relative">
-                    <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                    <input
-                        type="text"
-                        placeholder="搜索书友..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-gray-100 dark:bg-[#151515] rounded-xl pl-10 pr-4 py-2.5 text-sm text-text-main dark:text-white outline-none focus:ring-2 focus:ring-[#6B8E8E]/20 transition-all placeholder-gray-400"
-                    />
-                </div>
+            {/* Header (Native Style) */}
+            <header className="fixed top-0 left-0 right-0 z-40 h-[44px] bg-[#EDEDED] dark:bg-[#111] border-b border-[#D5D5D5] dark:border-gray-800 transition-all">
+                {!isSearching ? (
+                    <div className="relative h-full flex items-center justify-center px-4">
+                        <h1 className="text-[17px] font-medium text-black dark:text-white tracking-wide">书友</h1>
+                        <button
+                            onClick={() => setIsSearching(true)}
+                            className="absolute right-4 p-2 text-[#181818] dark:text-white/70 active:opacity-70 transition-opacity"
+                        >
+                            <Icon name="search" className="text-[22px]" />
+                        </button>
+                    </div>
+                ) : (
+                    <div className="h-full flex items-center gap-3 px-4 animate-fade-in">
+                        <div className="relative flex-1 h-[32px]">
+                            <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
+                            <input
+                                type="text"
+                                autoFocus
+                                placeholder="搜索书友..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full h-full bg-white dark:bg-[#1A1A1A] rounded-[6px] pl-9 pr-4 text-[14px] text-black dark:text-white outline-none focus:ring-1 focus:ring-[#07C160] transition-all placeholder-gray-400"
+                            />
+                        </div>
+                        <button
+                            onClick={() => {
+                                setIsSearching(false);
+                                setSearchTerm('');
+                            }}
+                            className="text-[15px] font-medium text-[#576B95] dark:text-blue-400 whitespace-nowrap px-1"
+                        >
+                            取消
+                        </button>
+                    </div>
+                )}
             </header>
 
             {/* List */}
-            <div className="px-6 py-4 space-y-3">
-                {filteredClassmates.map((classmate) => (
+            <div className="pt-[44px] pb-2">
+                {filteredClassmates.map((classmate, index) => (
                     <div
                         key={classmate.id}
                         onClick={() => navigate(`/user/${classmate.id}`)}
-                        className="flex items-center gap-4 p-4 bg-white dark:bg-[#151515] rounded-2xl border border-gray-50 dark:border-gray-800 shadow-sm hover:shadow-md transition-all cursor-pointer active:scale-[0.98]"
+                        className={`flex items-center gap-4 px-6 py-4 bg-white dark:bg-[#191919] cursor-pointer active:bg-gray-50 dark:active:bg-white/5 transition-colors ${index !== filteredClassmates.length - 1 ? 'border-b border-gray-50 dark:border-gray-800' : ''
+                            }`}
                     >
                         <img
                             src={classmate.avatar}
                             alt={classmate.name}
-                            className="w-12 h-12 rounded-full object-cover bg-gray-100"
+                            className="w-10 h-10 rounded-md object-cover bg-gray-100"
                         />
                         <div className="flex-1 min-w-0">
-                            <h3 className="font-bold text-text-main dark:text-white text-base truncate">{classmate.name}</h3>
-                            <p className="text-xs text-text-sub dark:text-gray-400 truncate">{classmate.bio}</p>
+                            <h3 className="font-medium text-text-main dark:text-white text-base truncate leading-tight">{classmate.name}</h3>
+                            <p className="text-xs text-gray-400 dark:text-gray-500 truncate mt-0.5">{classmate.bio}</p>
                         </div>
-                        <button className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400">
-                            <Icon name="chevron_right" />
-                        </button>
+                        <Icon name="chevron_right" className="text-gray-300 dark:text-gray-600 text-lg" />
                     </div>
                 ))}
 

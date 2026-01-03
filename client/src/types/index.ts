@@ -12,6 +12,14 @@ export interface User {
   currentDay: number;
   totalDays: number;
 
+  // v2.1 Soul Passport Fields
+  title?: string; // e.g. "Explorer"
+  vision?: string; // "What do I want to become?"
+  mission?: string; // "What is my purpose?"
+  current_issue?: string; // "What am I working on?"
+  energy_level?: number; // 0-100
+  core_values?: string[]; // ["Integrity", "Freedom"]
+
   // v2.0 Commercialization Fields
   isVip?: boolean;
   vipExpireDate?: string; // ISO Date String
@@ -19,6 +27,8 @@ export interface User {
   xp?: number; // Experience Points
   bio?: string;
 }
+
+export type Profile = User;
 
 export interface Task {
   id: string;

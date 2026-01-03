@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
 import { Image } from '@/components/ui/Image';
@@ -7,6 +7,8 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useAuth } from '@/contexts/AuthContext';
 import { useGamification } from '@/contexts/GamificationContext';
 import { useProfile } from '@/hooks/useProfile';
+import { useThemeColor } from '@/hooks/useThemeColor';
+import { SoulCard } from '@/components/SoulCard';
 
 interface MenuCellProps {
   icon: string;
@@ -33,17 +35,17 @@ const MenuCell: React.FC<MenuCellProps> = ({ icon, iconColor = 'text-gray-600', 
 export const Profile: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { xp } = useGamification();
   const { profile } = useProfile();
-  const [completedLessons] = useLocalStorage<string[]>('mr_learning_progress', []);
+  const [showSoulCard, setShowSoulCard] = useState(false);
+
+  // Set PWA status bar color to match page background
+  const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  useThemeColor(isDark ? '#111111' : '#F0F2F5');
 
   const DEFAULT_AVATAR = "https://api.dicebear.com/7.x/avataaars/svg?seed=Morning";
   // Fallback safe access
   const userName = profile?.name || (user?.email ? user.email.split('@')[0] : '书友');
   const userAvatar = profile?.avatar || DEFAULT_AVATAR;
-
-  // Dummy Data
-  const currentTerm = { name: '第八期：静水深流', total: 21, current: completedLessons.length + 1 };
 
   return (
     <div className="min-h-screen bg-[#F0F2F5] dark:bg-[#111] font-sans pb-32">
@@ -71,45 +73,32 @@ export const Profile: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <Icon name="qr_code_2" className="text-gray-400 text-xl" />
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowSoulCard(true);
+            }}
+            className="p-2 -mr-2 text-gray-400 hover:text-indigo-500 transition-colors"
+          >
+            <Icon name="qr_code_2" className="text-xl" />
+          </button>
           <Icon name="chevron_right" className="text-gray-300 dark:text-gray-600 text-lg" />
         </div>
       </div>
 
-      {/* 2. Group 1: Renewal (能量与补给) */}
-      <div className="mb-2">
-        <MenuCell
-          icon="diamond"
-          iconColor="text-orange-500"
-          label="能量补给站"
-          rightText="未开通"
-          onClick={() => navigate('/membership')}
-        />
-        <MenuCell
-          icon="military_tech"
-          iconColor="text-yellow-500"
-          label="里程碑"
-          rightText={`${xp} XP`}
-          onClick={() => navigate('/achievements')}
-          isLast
-        />
-      </div>
-
-      {/* 3. Group 2: Inner Work (内在修习) */}
+      {/* Group 1 */}
       <div className="mb-2">
         <MenuCell
           icon="menu_book"
           iconColor="text-emerald-500"
           label="我的晨读"
-          rightText={`Day ${currentTerm.current}`}
           onClick={() => navigate('/my-reading')}
         />
         <MenuCell
-          icon="edit_note"
-          iconColor="text-indigo-500"
-          label="觉察日记"
-          rightText="45 篇"
-          onClick={() => navigate('/diary')}
+          icon="diversity_3"
+          iconColor="text-pink-500"
+          label="情感账户"
+          onClick={() => navigate('/relationships')}
         />
         <MenuCell
           icon="bar_chart"
@@ -120,41 +109,54 @@ export const Profile: React.FC = () => {
         />
       </div>
 
-      {/* 4. Group 3: Outer Work (外在连接) */}
+      {/* Group 2 */}
       <div className="mb-2">
         <MenuCell
-          icon="diversity_3"
-          iconColor="text-pink-500"
-          label="情感账户"
-          rightText="3 位伙伴"
-          onClick={() => navigate('/relationships')}
-        />
-        <MenuCell
-          icon="auto_awesome"
+          icon="share"
           iconColor="text-purple-500"
           label="晨读分享"
-          rightText="38 次"
-          onClick={() => navigate('/insights')}
+          onClick={() => navigate('/community')}
+        />
+        <MenuCell
+          icon="edit_note"
+          iconColor="text-indigo-500"
+          label="觉察日记"
+          onClick={() => navigate('/diary')}
         />
         <MenuCell
           icon="collections_bookmark"
           iconColor="text-red-500"
           label="我的收藏"
           onClick={() => navigate('/favorites')}
+        />
+        <MenuCell
+          icon="visibility"
+          iconColor="text-orange-500"
+          label="我的看见"
+          onClick={() => navigate('/insights')}
           isLast
         />
       </div>
 
-      {/* 5. Group 4: Settings (系统设定) */}
+      {/* Group 3 */}
       <div className="mb-8">
         <MenuCell
           icon="settings"
           iconColor="text-gray-500"
-          label="系统校准"
+          label="系统设置"
           onClick={() => navigate('/settings')}
           isLast
         />
       </div>
+
+      {/* Soul Card Modal */}
+      {showSoulCard && (
+        <SoulCard
+          user={user}
+          profile={profile}
+          onClose={() => setShowSoulCard(false)}
+        />
+      )}
 
     </div>
   );

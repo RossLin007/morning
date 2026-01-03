@@ -95,8 +95,8 @@ export const Image: React.FC<ImageProps> = ({
           onLoad={handleLoad}
           onError={handleError}
           className={cn(
-            "w-full h-full object-cover transition-all duration-700 ease-in-out",
-            isLoaded ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-110 blur-lg",
+            "w-full h-full object-cover transition-opacity duration-300 ease-in-out",
+            isLoaded ? "opacity-100" : "opacity-0",
             className
           )}
           {...props}

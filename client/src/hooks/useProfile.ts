@@ -1,4 +1,5 @@
 
+import { useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { uniauth } from '@/lib/uniauth';
@@ -20,7 +21,10 @@ export const useProfile = () => {
     const queryClient = useQueryClient();
 
     // Create user metadata object from UniAuth user
-    const userMeta = user ? { name: user.nickname, avatar: user.avatar_url } : undefined;
+    const userMeta = user ? {
+        name: user.nickname || undefined,
+        avatar: user.avatar_url || undefined
+    } : undefined;
 
     const { data: profile, isLoading, error } = useQuery({
         queryKey: ['profile', user?.id],
@@ -62,7 +66,26 @@ export const useProfile = () => {
         },
         enabled: !!user,
         staleTime: 1000 * 60 * 10, // 10 minutes cache
+        initialData: () => {
+            // Try to load from localStorage for instant render
+            const cached = localStorage.getItem(`profile_cache_${user?.id}`);
+            if (cached) {
+                try {
+                    return JSON.parse(cached);
+                } catch (e) {
+                    return null;
+                }
+            }
+            return null;
+        }
     });
+
+    // Sync data to localStorage on success
+    useEffect(() => {
+        if (profile && user?.id) {
+            localStorage.setItem(`profile_cache_${user.id}`, JSON.stringify(profile));
+        }
+    }, [profile, user?.id]);
 
     const updateProfileMutation = useMutation({
         mutationFn: async (updates: Partial<User>) => {
