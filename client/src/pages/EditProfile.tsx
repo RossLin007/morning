@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Icon } from '@/components/ui/Icon';
+import { NavBar } from '@/components/layout/NavBar';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfile } from '@/hooks/useProfile';
 import { useToast } from '@/contexts/ToastContext';
@@ -117,18 +117,17 @@ export const EditProfile: React.FC = () => {
   if (isProfileLoading) return null;
 
   return (
-    <div className="min-h-screen bg-[#F5F7F5] dark:bg-[#0A0A0A] font-sans animate-fade-in flex flex-col pb-10">
+    <div className="min-h-full bg-[#F5F7F5] dark:bg-[#0A0A0A] font-sans animate-fade-in flex flex-col pb-10">
 
       {/* Header */}
-      <header className="sticky top-0 z-20 flex items-center justify-between px-6 py-4 bg-[#F5F7F5]/80 dark:bg-[#0A0A0A]/80 backdrop-blur-xl border-b border-gray-100/50 dark:border-gray-800">
-        <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-          <Icon name="close" className="text-text-main dark:text-white" />
-        </button>
-        <h1 className="text-lg font-serif font-bold text-text-main dark:text-white">Soul Passport</h1>
-        <button onClick={handleSubmit(onSubmit)} disabled={loading} className="text-sm font-bold text-primary hover:text-primary-dark disabled:opacity-50 transition-colors bg-primary/10 px-4 py-1.5 rounded-full">
-          {loading ? '保存中' : '签发'}
-        </button>
-      </header>
+      <NavBar
+        title="Soul Passport"
+        right={
+          <button onClick={handleSubmit(onSubmit)} disabled={loading} className="text-sm font-bold text-primary hover:text-primary-dark disabled:opacity-50 transition-colors bg-primary/10 px-4 py-1.5 rounded-full">
+            {loading ? '保存中' : '签发'}
+          </button>
+        }
+      />
 
       <div className="flex-1 px-6 py-6 space-y-8 max-w-lg mx-auto w-full">
 

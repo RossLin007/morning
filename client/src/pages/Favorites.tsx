@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
+import { NavBar } from '@/components/layout/NavBar';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { courseData } from '@/data/courseData';
 
@@ -55,14 +56,9 @@ export const Favorites: React.FC = () => {
     );
 
     return (
-        <div className="min-h-screen bg-[#F9F9F9] dark:bg-[#0A0A0A] font-sans pb-24">
+        <div className="min-h-full bg-[#F9F9F9] dark:bg-[#0A0A0A] font-sans pb-6">
             {/* Header */}
-            <div className="sticky top-0 z-40 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 px-6 py-4 flex items-center gap-4">
-                <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                    <Icon name="arrow_back" className="text-xl" />
-                </button>
-                <h1 className="text-lg font-serif font-bold text-text-main dark:text-white">我的收藏</h1>
-            </div>
+            <NavBar title="我的收藏" />
 
             {/* Tabs */}
             <div className="px-6 py-4 flex gap-6 border-b border-gray-100 dark:border-gray-800">

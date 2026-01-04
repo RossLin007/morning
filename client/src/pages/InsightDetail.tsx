@@ -1,11 +1,10 @@
-
 import React from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
+import { NavBar } from '@/components/layout/NavBar';
 import { Icon } from '@/components/ui/Icon';
 
 export const InsightDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
-    const navigate = useNavigate();
     const location = useLocation();
 
     // Try to get data from state
@@ -18,14 +17,9 @@ export const InsightDetail: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#0A0A0A] pb-24 font-sans">
+        <div className="min-h-full bg-[#FDFDFD] dark:bg-[#0A0A0A] pb-6 font-sans">
             {/* Header */}
-            <div className="px-6 pt-12 pb-6 sticky top-0 bg-[#FDFDFD]/90 dark:bg-[#0A0A0A]/90 backdrop-blur-md z-30 flex items-center gap-4">
-                <button onClick={() => navigate(-1)} className="w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-text-main dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                    <Icon name="arrow_back" />
-                </button>
-                <span className="font-bold text-lg dark:text-white">小凡看见</span>
-            </div>
+            <NavBar title="小凡看见" />
 
             <div className="px-6">
                 <div className="bg-white dark:bg-[#151515] p-8 rounded-3xl shadow-lg shadow-purple-500/5 border border-purple-100 dark:border-purple-900/20 relative overflow-hidden">

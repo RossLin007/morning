@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Icon } from '@/components/ui/Icon';
+import { NavBar } from '@/components/layout/NavBar';
 
 // Mock Data for Insights
 const MOCK_INSIGHTS = [
@@ -81,15 +80,8 @@ export const InsightsList: React.FC = () => {
     return (
         <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#0A0A0A] pb-24 font-sans">
             {/* Header */}
-            <div className="px-6 pt-12 pb-6 flex items-center justify-between sticky top-0 bg-[#FDFDFD]/90 dark:bg-[#0A0A0A]/90 backdrop-blur-md z-30">
-                <div className="flex items-center gap-4">
-                    <button onClick={() => navigate(-1)} className="w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-text-main dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                        <Icon name="arrow_back" />
-                    </button>
-                    <h1 className="text-2xl font-serif font-bold text-text-main dark:text-white">小凡看见</h1>
-                </div>
-                <div className="w-10"></div>
-            </div>
+            {/* Header */}
+            <NavBar title="小凡看见" />
 
             {/* List */}
             <div className="px-6 space-y-4">

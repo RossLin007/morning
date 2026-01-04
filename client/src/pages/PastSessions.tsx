@@ -2,6 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
+import { NavBar } from '@/components/layout/NavBar';
 
 interface SessionInfo {
     id: string;
@@ -26,17 +27,12 @@ const SESSIONS: SessionInfo[] = [
 export const PastSessions: React.FC = () => {
     const navigate = useNavigate();
 
+
+
     return (
-        <div className="min-h-screen bg-[#F5F7F5] dark:bg-[#0A0A0A] pb-24">
+        <div className="min-h-full bg-[#F5F7F5] dark:bg-[#0A0A0A] pb-24">
             {/* Header */}
-            <header className="sticky top-0 z-40 px-6 py-4 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
-                <div className="flex items-center gap-4">
-                    <button onClick={() => navigate(-1)} className="w-10 h-10 flex items-center justify-center">
-                        <Icon name="arrow_back" className="text-text-main dark:text-white" />
-                    </button>
-                    <h1 className="text-lg font-display font-bold text-text-main dark:text-white">往期回顾</h1>
-                </div>
-            </header>
+            <NavBar title="往期回顾" />
 
             {/* Stats Summary */}
             <div className="px-6 py-4">

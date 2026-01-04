@@ -51,7 +51,7 @@ const Community: React.FC = () => {
                         </button>
                     </div>
                 ) : (
-                    <div className="h-full flex items-center gap-3 px-4 animate-fade-in">
+                    <div className="h-[44px] flex items-center gap-3 px-4 animate-fade-in">
                         <div className="relative flex-1 h-[32px]">
                             <Icon name="search" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
                             <input

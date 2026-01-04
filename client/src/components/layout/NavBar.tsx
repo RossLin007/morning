@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
 
 interface NavBarProps {
-    title: string;
+    title?: React.ReactNode;
+    left?: React.ReactNode;
     right?: React.ReactNode;
     showBack?: boolean;
     onBack?: () => void;
@@ -13,6 +14,7 @@ interface NavBarProps {
 
 export const NavBar: React.FC<NavBarProps> = ({
     title,
+    left,
     right,
     showBack = true,
     onBack,
@@ -31,9 +33,9 @@ export const NavBar: React.FC<NavBarProps> = ({
     return (
         <header className={`sticky top-0 z-50 pt-safe bg-[#FAFAFA] dark:bg-[#111] transition-all ${className}`}>
             <div className="relative h-[44px] flex items-center justify-between px-4">
-                {/* Left: Back Button */}
+                {/* Left: Back Button or Custom */}
                 <div className="flex-1 flex items-center justify-start">
-                    {showBack && (
+                    {left ? left : showBack && (
                         <button
                             onClick={handleBack}
                             className="w-[44px] h-[44px] flex items-center justify-center -ml-2 rounded-full active:bg-gray-100 dark:active:bg-white/10 transition-colors"

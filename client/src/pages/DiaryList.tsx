@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
+import { NavBar } from '@/components/layout/NavBar';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 interface DiaryEntry {
@@ -9,16 +9,21 @@ interface DiaryEntry {
     date: string;
     day: number;
     situation: string;
+    innerReaction: string;
     emotion: string;
+    behavior: string;
+    awareness: string;
+    actionPlan: string[];
+    isPublic: boolean;
 }
 
 const EMOTION_ICONS: Record<string, string> = {
-    'calm': '😌',
-    'happy': '😊',
-    'curious': '🤔',
-    'anxious': '😰',
-    'sad': '😔',
-    'angry': '😤',
+    calm: '😌',
+    happy: '😊',
+    curious: '🤔',
+    anxious: '😰',
+    sad: '😔',
+    angry: '😤',
 };
 
 export const DiaryList: React.FC = () => {
@@ -26,19 +31,16 @@ export const DiaryList: React.FC = () => {
     const [diaries] = useLocalStorage<DiaryEntry[]>('mr_awareness_diaries', []);
 
     return (
-        <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#0A0A0A] pb-24 font-sans">
+        <div className="min-h-full bg-[#FDFDFD] dark:bg-[#0A0A0A] pb-6 font-sans">
             {/* Header */}
-            <div className="px-6 pt-12 pb-6 flex items-center justify-between sticky top-0 bg-[#FDFDFD]/90 dark:bg-[#0A0A0A]/90 backdrop-blur-md z-30">
-                <div className="flex items-center gap-4">
-                    <button onClick={() => navigate(-1)} className="w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-text-main dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                        <Icon name="arrow_back" />
-                    </button>
-                    <h1 className="text-2xl font-serif font-bold text-text-main dark:text-white">觉察日记</h1>
-                </div>
-                <div className="text-sm font-bold text-gray-500 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
-                    共 {diaries.length} 篇
-                </div>
-            </div>
+            <NavBar
+                title="觉察日记"
+                right={
+                    <div className="text-xs font-bold text-gray-500 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
+                        共 {diaries.length} 篇
+                    </div>
+                }
+            />
 
             {/* List */}
             <div className="px-6 space-y-4">

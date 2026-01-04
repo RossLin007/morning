@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
+import { NavBar } from '@/components/layout/NavBar';
 import { useGamification } from '@/contexts/GamificationContext';
 
 // --- Mock Data: The Path of Soul Evolution ---
@@ -83,19 +84,10 @@ export const Achievements: React.FC = () => {
    }, []);
 
    return (
-      <div className="min-h-screen bg-[#F9F9F9] dark:bg-[#0A0A0A] font-sans animate-fade-in pb-12 transition-colors duration-500">
+      <div className="min-h-full bg-[#F9F9F9] dark:bg-[#0A0A0A] font-sans animate-fade-in pb-6 transition-colors duration-500">
 
          {/* Header */}
-         <header className="sticky top-0 z-50 px-6 py-4 flex items-center justify-between bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
-            <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-               <Icon name="arrow_back" className="text-text-main dark:text-white" />
-            </button>
-            <div className="flex flex-col items-center">
-               <h1 className="text-lg font-serif font-bold text-text-main dark:text-white">英雄之旅</h1>
-               <span className="text-[10px] text-gray-400 uppercase tracking-widest">Milestones</span>
-            </div>
-            <div className="w-10"></div>
-         </header>
+         <NavBar title="英雄之旅" />
 
          <div className="p-6 max-w-lg mx-auto relative">
 
@@ -128,8 +120,8 @@ export const Achievements: React.FC = () => {
 
                         {/* Content Card */}
                         <div className={`flex-1 rounded-2xl p-5 border transition-all duration-300 ${actuallyReached
-                              ? 'bg-white dark:bg-[#151515] border-gray-100 dark:border-gray-800 shadow-soft hover:shadow-md'
-                              : 'bg-transparent border-transparent opacity-60 grayscale'
+                           ? 'bg-white dark:bg-[#151515] border-gray-100 dark:border-gray-800 shadow-soft hover:shadow-md'
+                           : 'bg-transparent border-transparent opacity-60 grayscale'
                            }`}>
                            <div className="flex justify-between items-start mb-2">
                               <h3 className={`text-base font-bold font-serif ${actuallyReached ? 'text-text-main dark:text-white' : 'text-gray-400'}`}>

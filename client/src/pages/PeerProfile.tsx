@@ -1,12 +1,11 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
 import { NavBar } from '@/components/layout/NavBar';
-import { Image } from '@/components/ui/Image'; // Assuming Image component exists or use img
-import { ASSETS } from '@/lib/constants';
 
 // Mock User Data
+const DEFAULT_AVATAR = "https://api.dicebear.com/7.x/avataaars/svg?seed=Morning";
+
 const MOCK_USERS: Record<string, any> = {
     '101': { name: '小红', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix', bio: '坚持晨读第5天', days: 5, term: '第八期' },
     '102': { name: '张伟', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka', bio: '在这里遇见更好的自己', days: 12, term: '第八期' },
@@ -80,7 +79,7 @@ export const PeerProfile: React.FC = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState<'diary' | 'insight' | 'share'>('diary');
 
-    const user = MOCK_USERS[id || ''] || { name: '书友', avatar: ASSETS.DEFAULT_AVATAR, bio: '这位书友很神秘', days: 0 };
+    const user = MOCK_USERS[id || ''] || { name: '书友', avatar: DEFAULT_AVATAR, bio: '这位书友很神秘', days: 0 };
 
     return (
         <div className="min-h-full bg-[#FDFDFD] dark:bg-[#0A0A0A] pb-6 font-sans">

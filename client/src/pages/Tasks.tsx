@@ -4,11 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
 import { Task } from '@/types';
 import { CalendarModal } from '@/components/business/CalendarModal';
-import { Modal } from '@/components/ui/Modal'; 
+import { NavBar } from '@/components/layout/NavBar';
+import { Modal } from '@/components/ui/Modal';
 import { useToast } from '@/contexts/ToastContext';
 import { useGamification } from '@/contexts/GamificationContext';
 import { useHaptics } from '@/hooks/useHaptics';
-import { useTimer } from '@/hooks/useTimer'; 
+import { useTimer } from '@/hooks/useTimer';
 import { formatDuration } from '@/lib/utils';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useTasks } from '@/hooks/useTasks';
@@ -35,8 +36,8 @@ export const Tasks: React.FC = () => {
 
   // Merge static metadata with remote status
   const tasks = initialTasksData.map(t => {
-      const remote = (remoteTasks as any[]).find((rt: any) => rt.task_id === t.id);
-      return remote ? { ...t, status: 'done' as const } : t;
+    const remote = (remoteTasks as any[]).find((rt: any) => rt.task_id === t.id);
+    return remote ? { ...t, status: 'done' as const } : t;
   });
 
   // Audio Recording State
@@ -60,60 +61,63 @@ export const Tasks: React.FC = () => {
     } else if (task.type === 'writing') {
       navigate('/note/new');
     } else {
-        await toggleTaskStatus(task.id, task.status);
+      await toggleTaskStatus(task.id, task.status);
     }
   };
 
   const toggleTaskStatus = async (id: string, currentStatus: string) => {
-      if (currentStatus === 'todo') {
-          await completeTask(id);
-          haptic('success');
-          showToast(t('tasks.action.task_completed'), 'success');
-          addXp(10, '完成任务');
-          addCoins(1, '任务奖励');
-      }
+    if (currentStatus === 'todo') {
+      await completeTask(id);
+      haptic('success');
+      showToast(t('tasks.action.task_completed'), 'success');
+      addXp(10, '完成任务');
+      addCoins(1, '任务奖励');
+    }
   };
 
   const finishRecording = async () => {
-      stopRecord();
-      await completeTask('t2'); // Done
-      await addCheckin(); // Add today to calendar
-      
-      setShowRecorder(false);
-      showToast(t('tasks.action.checkin_success'), "success");
-      addXp(30, '语音打卡');
-      addCoins(5, '早起奖励');
+    stopRecord();
+    await completeTask('t2'); // Done
+    await addCheckin(); // Add today to calendar
+
+    setShowRecorder(false);
+    showToast(t('tasks.action.checkin_success'), "success");
+    addXp(30, '语音打卡');
+    addCoins(5, '早起奖励');
   };
 
   if (isLoading) return null;
 
   const filteredTasks = tasks.filter(t => {
-      if (filter === 'all') return true;
-      if (filter === 'todo') return t.status === 'todo' || t.status === 'locked';
-      if (filter === 'done') return t.status === 'done';
-      return true;
+    if (filter === 'all') return true;
+    if (filter === 'todo') return t.status === 'todo' || t.status === 'locked';
+    if (filter === 'done') return t.status === 'done';
+    return true;
   });
 
   return (
-    <div className="flex flex-col pb-24 min-h-screen bg-[#F5F7F5] dark:bg-black font-sans relative">
-      
-      <CalendarModal 
-         isOpen={showCalendar} 
-         onClose={() => setShowCalendar(false)} 
-         completedDates={checkins} 
+    <div className="flex flex-col pb-24 min-h-full bg-[#F5F7F5] dark:bg-black font-sans relative">
+
+      <CalendarModal
+        isOpen={showCalendar}
+        onClose={() => setShowCalendar(false)}
+        completedDates={checkins}
       />
 
       {/* Dynamic Glass Header */}
-      <header className={`sticky top-0 z-40 px-6 py-4 flex items-center justify-between transition-all duration-300 ${scrolled ? 'bg-white/80 dark:bg-black/80 backdrop-blur-xl shadow-sm' : 'bg-transparent'}`}>
-        <div className="w-10"></div>
-        <h2 className={`text-lg font-display font-bold text-text-main dark:text-white transition-opacity duration-300 ${scrolled ? 'opacity-100' : 'opacity-0'}`}>{t('tasks.title')}</h2>
-        <button 
-           onClick={() => setShowCalendar(true)}
-           className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/50 dark:hover:bg-white/10 transition-colors"
-        >
-          <Icon name="calendar_today" className="text-text-main dark:text-white" />
-        </button>
-      </header>
+      <NavBar
+        className={`transition-all duration-300 ${scrolled ? 'bg-white/80 dark:bg-black/80 backdrop-blur-xl shadow-sm' : 'bg-transparent border-transparent'}`}
+        showBack={true}
+        title={<span className={`transition-opacity duration-300 ${scrolled ? 'opacity-100' : 'opacity-0'}`}>{t('tasks.title')}</span>}
+        right={
+          <button
+            onClick={() => setShowCalendar(true)}
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/50 dark:hover:bg-white/10 transition-colors"
+          >
+            <Icon name="calendar_today" className="text-text-main dark:text-white" />
+          </button>
+        }
+      />
 
       {/* Greeting - Immersive */}
       <div className="px-6 pt-2 pb-6">
@@ -135,11 +139,10 @@ export const Tasks: React.FC = () => {
             <button
               key={tab.id}
               onClick={() => setFilter(tab.id as any)}
-              className={`snap-start flex h-9 shrink-0 items-center justify-center rounded-full px-6 text-sm font-medium transition-all active:scale-95 ${
-                filter === tab.id 
-                  ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                  : 'bg-white dark:bg-[#1A1A1A] text-text-sub dark:text-gray-400 border border-transparent shadow-sm'
-              }`}
+              className={`snap-start flex h-9 shrink-0 items-center justify-center rounded-full px-6 text-sm font-medium transition-all active:scale-95 ${filter === tab.id
+                ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                : 'bg-white dark:bg-[#1A1A1A] text-text-sub dark:text-gray-400 border border-transparent shadow-sm'
+                }`}
             >
               {tab.label}
               {tab.id === 'todo' && filter !== 'todo' && <span className="ml-1.5 size-1.5 bg-red-500 rounded-full"></span>}
@@ -152,10 +155,10 @@ export const Tasks: React.FC = () => {
       <div className="flex flex-col gap-5 px-6 pb-6 md:grid md:grid-cols-2">
         {/* Featured Task */}
         {filteredTasks.filter(t => t.id === 't1').map(task => (
-           <div key={task.id} className="md:col-span-2 flex flex-col bg-white dark:bg-[#1A1A1A] rounded-3xl shadow-soft dark:shadow-none border border-white dark:border-gray-800 overflow-hidden group cursor-pointer" onClick={() => handleTaskClick(task)}>
+          <div key={task.id} className="md:col-span-2 flex flex-col bg-white dark:bg-[#1A1A1A] rounded-3xl shadow-soft dark:shadow-none border border-white dark:border-gray-800 overflow-hidden group cursor-pointer" onClick={() => handleTaskClick(task)}>
             <div className="relative h-36 w-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
-              <div 
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" 
+              <div
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
                 style={{ backgroundImage: `url("${task.thumbnail}")` }}
               ></div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -170,7 +173,7 @@ export const Tasks: React.FC = () => {
               <div className="flex justify-between items-start">
                 <h3 className="text-text-main dark:text-white text-lg font-bold font-display leading-tight">{task.title}</h3>
                 <div className="size-8 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
-                   <Icon name="arrow_forward" className="text-sm" />
+                  <Icon name="arrow_forward" className="text-sm" />
                 </div>
               </div>
               <p className="text-text-sub dark:text-gray-400 text-xs font-medium">{task.subtitle}</p>
@@ -184,8 +187,8 @@ export const Tasks: React.FC = () => {
             return (
               <div key={task.id} className="mt-4 md:mt-0 opacity-60">
                 <div className="flex items-center gap-2 mb-3">
-                   <Icon name="lock" className="text-gray-400 text-xs" />
-                   <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t('tasks.status.tomorrow')}</h3>
+                  <Icon name="lock" className="text-gray-400 text-xs" />
+                  <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t('tasks.status.tomorrow')}</h3>
                 </div>
                 <div className="flex items-center gap-4 rounded-2xl bg-gray-100 dark:bg-gray-800/50 p-4 border border-transparent dark:border-gray-800 h-full">
                   <div className="size-10 rounded-xl bg-gray-200 dark:bg-gray-700 flex items-center justify-center shrink-0 text-gray-400">
@@ -202,7 +205,7 @@ export const Tasks: React.FC = () => {
 
           const isDone = task.status === 'done';
           return (
-             <div key={task.id} className={`flex items-center justify-between gap-4 rounded-2xl bg-white dark:bg-[#1A1A1A] p-4 shadow-soft dark:shadow-none border border-white dark:border-gray-800 transition-all ${isDone ? 'opacity-80' : 'hover:-translate-y-0.5'}`}>
+            <div key={task.id} className={`flex items-center justify-between gap-4 rounded-2xl bg-white dark:bg-[#1A1A1A] p-4 shadow-soft dark:shadow-none border border-white dark:border-gray-800 transition-all ${isDone ? 'opacity-80' : 'hover:-translate-y-0.5'}`}>
               <div className="flex items-center gap-4">
                 <div className={`size-12 rounded-2xl flex items-center justify-center shrink-0 ${isDone ? 'bg-green-50 dark:bg-green-900/20 text-green-600' : 'bg-orange-50 dark:bg-orange-900/20 text-orange-500'}`}>
                   <Icon name={task.type === 'audio' ? 'mic' : 'edit_note'} className="text-xl" />
@@ -219,9 +222,9 @@ export const Tasks: React.FC = () => {
                 </div>
               </div>
               {isDone ? (
-                 <button onClick={() => handleTaskClick(task)} className="size-8 flex items-center justify-center rounded-full bg-gray-50 dark:bg-gray-800 text-gray-300 hover:text-green-500 transition-colors">
-                    <Icon name="replay" className="text-sm" />
-                 </button>
+                <button onClick={() => handleTaskClick(task)} className="size-8 flex items-center justify-center rounded-full bg-gray-50 dark:bg-gray-800 text-gray-300 hover:text-green-500 transition-colors">
+                  <Icon name="replay" className="text-sm" />
+                </button>
               ) : (
                 <button onClick={() => handleTaskClick(task)} className="flex cursor-pointer items-center justify-center rounded-xl h-9 px-4 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 text-xs font-bold hover:bg-orange-100 transition-colors">
                   {t('tasks.action.go')}
@@ -234,37 +237,37 @@ export const Tasks: React.FC = () => {
 
       {/* Recorder Modal using Reusable Modal Component */}
       <Modal isOpen={showRecorder} onClose={() => setShowRecorder(false)} type="bottom">
-         <div className="flex flex-col items-center pb-6">
-            <div className="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full mb-8"></div>
-            <h3 className="text-xl font-bold text-text-main dark:text-white mb-2">{t('tasks.audio_modal.title')}</h3>
-            <p className="text-gray-400 text-sm mb-10">{t('tasks.audio_modal.subtitle')}</p>
-            
-            <div className="relative mb-12">
-               {isRecording && (
-                  <div className="absolute inset-0 rounded-full bg-red-500/20 animate-ping"></div>
-               )}
-               <button 
-                  onClick={() => {
-                      if (isRecording) {
-                          finishRecording();
-                      } else {
-                          startRecord();
-                      }
-                  }}
-                  className={`relative z-10 size-24 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 ${isRecording ? 'bg-red-500 text-white scale-110' : 'bg-primary text-white hover:scale-105'}`}
-               >
-                  <Icon name={isRecording ? "stop" : "mic"} className="text-4xl" filled />
-               </button>
-            </div>
+        <div className="flex flex-col items-center pb-6">
+          <div className="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full mb-8"></div>
+          <h3 className="text-xl font-bold text-text-main dark:text-white mb-2">{t('tasks.audio_modal.title')}</h3>
+          <p className="text-gray-400 text-sm mb-10">{t('tasks.audio_modal.subtitle')}</p>
 
-            <div className="text-4xl font-mono font-light text-text-main dark:text-white tracking-widest mb-8">
-               {formatDuration(recordTime)}
-            </div>
+          <div className="relative mb-12">
+            {isRecording && (
+              <div className="absolute inset-0 rounded-full bg-red-500/20 animate-ping"></div>
+            )}
+            <button
+              onClick={() => {
+                if (isRecording) {
+                  finishRecording();
+                } else {
+                  startRecord();
+                }
+              }}
+              className={`relative z-10 size-24 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 ${isRecording ? 'bg-red-500 text-white scale-110' : 'bg-primary text-white hover:scale-105'}`}
+            >
+              <Icon name={isRecording ? "stop" : "mic"} className="text-4xl" filled />
+            </button>
+          </div>
 
-            <p className="text-center text-lg font-serif italic text-gray-500 dark:text-gray-400 max-w-xs leading-relaxed">
-               {t('tasks.audio_modal.quote')}
-            </p>
-         </div>
+          <div className="text-4xl font-mono font-light text-text-main dark:text-white tracking-widest mb-8">
+            {formatDuration(recordTime)}
+          </div>
+
+          <p className="text-center text-lg font-serif italic text-gray-500 dark:text-gray-400 max-w-xs leading-relaxed">
+            {t('tasks.audio_modal.quote')}
+          </p>
+        </div>
       </Modal>
     </div>
   );

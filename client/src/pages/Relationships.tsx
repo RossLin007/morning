@@ -1,8 +1,8 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
 import { IconButton } from '@/components/ui/IconButton';
+import { NavBar } from '@/components/layout/NavBar';
 import { useHaptics } from '@/hooks/useHaptics';
 import { useAuth } from '@/contexts/AuthContext';
 import { formatRelativeTime } from '@/lib/utils';
@@ -106,14 +106,14 @@ export const Relationships: React.FC = () => {
     const activeConfig = roleConfig[activeRole];
 
     return (
-        <div className="min-h-screen bg-[#F9F9F9] dark:bg-[#0A0A0A] flex flex-col font-sans relative animate-fade-in pb-10 transition-colors duration-500">
+        <div className="min-h-full bg-[#F9F9F9] dark:bg-[#0A0A0A] flex flex-col font-sans relative animate-fade-in pb-10 transition-colors duration-500">
 
             {/* Header */}
-            <header className="sticky top-0 z-50 px-6 py-4 flex items-center justify-between bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-800">
-                <IconButton icon="arrow_back" onClick={handleBack} variant="ghost" label="Back" />
-                <h1 className="text-lg font-serif font-bold text-text-main dark:text-white">情感账户</h1>
-                <IconButton icon="person_add" onClick={() => navigate('/match', { state: { role: activeRole } })} variant="ghost" label="Add" />
-            </header>
+            <NavBar
+                title="情感账户"
+                onBack={handleBack}
+                right={<IconButton icon="person_add" onClick={() => navigate('/match', { state: { role: activeRole } })} variant="ghost" label="Add" />}
+            />
 
             {/* Role Switcher */}
             <div className="px-6 mt-4 mb-2">

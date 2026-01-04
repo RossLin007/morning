@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
+import { NavBar } from '@/components/layout/NavBar';
 import { Button } from '@/components/ui/Button';
 import { useHaptics } from '@/hooks/useHaptics';
 import { useGamification } from '@/contexts/GamificationContext';
@@ -33,7 +34,7 @@ const EMOTIONS = [
 export const AwarenessDiary: React.FC = () => {
     const navigate = useNavigate();
     const { trigger: haptic } = useHaptics();
-    const { addXP, addCoins } = useGamification();
+    const { addXp, addCoins } = useGamification();
     const { showToast } = useToast();
 
     const [diaries, setDiaries] = useLocalStorage<DiaryEntry[]>('mr_awareness_diaries', []);
@@ -118,7 +119,7 @@ export const AwarenessDiary: React.FC = () => {
             setDiaries([...diaries, newEntry]);
 
             // Reward user
-            addXP(50);
+            addXp(50);
             addCoins(10);
 
             showToast('觉察日记已保存，获得 50 XP + 10 金币！', 'success');
@@ -134,18 +135,11 @@ export const AwarenessDiary: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#F5F7F5] dark:bg-[#0A0A0A] pb-8">
+        <div className="min-h-full bg-[#F5F7F5] dark:bg-[#0A0A0A] pb-6">
             {/* Header */}
-            <header className="sticky top-0 z-40 px-6 py-4 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
-                <div className="flex items-center justify-between">
-                    <button onClick={() => navigate(-1)} className="w-10 h-10 flex items-center justify-center">
-                        <Icon name="arrow_back" className="text-text-main dark:text-white" />
-                    </button>
-                    <h1 className="text-lg font-display font-bold text-text-main dark:text-white">
-                        Day {currentDay} 觉察日记
-                    </h1>
-                    <div className="w-10"></div>
-                </div>
+            <NavBar title={`Day ${currentDay} 觉察日记`} className="bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b-0" />
+
+            <header className="sticky top-[44px] z-30 px-6 py-2 bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 transition-all">
 
                 {/* Progress Steps */}
                 <div className="flex items-center justify-between mt-4 px-2">

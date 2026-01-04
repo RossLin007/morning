@@ -8,6 +8,7 @@ import { getLessonById } from '@/data/courseData';
 import ReactMarkdown from 'react-markdown';
 import { useHaptics } from '@/hooks/useHaptics';
 import { QuoteShareModal } from '@/components/business/QuoteShareModal';
+import { NavBar } from '@/components/layout/NavBar';
 
 export const CourseDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -54,6 +55,7 @@ export const CourseDetail: React.FC = () => {
     return (
         <div className="min-h-screen bg-white dark:bg-[#0A0A0A] pb-32 relative font-sans">
 
+
             {/* 1. Immersive Header */}
             <div className="relative h-[60vh] w-full overflow-hidden">
                 <div
@@ -63,14 +65,18 @@ export const CourseDetail: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#0A0A0A] via-transparent to-black/30"></div>
 
                 {/* Navbar */}
-                <div className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrollProgress > 0.8 ? 'bg-white/90 dark:bg-black/90 backdrop-blur-md shadow-sm py-4' : 'py-6'}`}>
-                    <div className="max-w-4xl mx-auto px-6 flex items-center justify-between">
+                <NavBar
+                    className={`transition-all duration-300 ${scrollProgress > 0.8 ? 'bg-white/90 dark:bg-black/90 backdrop-blur-md shadow-sm' : 'bg-transparent border-transparent'}`}
+                    showBack={false}
+                    left={
                         <button
                             onClick={() => navigate(-1)}
                             className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${scrollProgress > 0.8 ? 'bg-gray-100 dark:bg-gray-800 text-black dark:text-white' : 'bg-black/20 backdrop-blur-md text-white'}`}
                         >
                             <Icon name="arrow_back" />
                         </button>
+                    }
+                    right={
                         <div className="flex gap-3">
                             <button
                                 onClick={() => setShowShareModal(true)}
@@ -85,8 +91,8 @@ export const CourseDetail: React.FC = () => {
                                 <Icon name="dark_mode" />
                             </button>
                         </div>
-                    </div>
-                </div>
+                    }
+                />
 
                 {/* Header Content */}
                 <div className="absolute bottom-16 left-6 right-6">
@@ -194,7 +200,7 @@ export const CourseDetail: React.FC = () => {
                                     {props.children}
                                 </ol>
                             ),
-                            li: ({ node, index, ...props }) => {
+                            li: ({ node, ...props }) => {
                                 // Checking if it's an ordered list item to apply number styling
                                 // ReactMarkdown separates the numbering logic, but standard <li> inside <ol> works
                                 return (
@@ -207,7 +213,7 @@ export const CourseDetail: React.FC = () => {
                                                 To do custom "Paragraph Numbering" style requested:
                                             */}
                                             <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#E8F2F2] dark:bg-[#1C2C2C] text-[#6B8E8E] dark:text-[#8AAFAF] font-serif font-bold italic flex items-center justify-center text-lg mt-0.5 border border-[#6B8E8E]/20">
-                                                {index !== undefined ? index + 1 : '•'}
+                                                •
                                             </span>
                                             <div className="flex-1 text-gray-800 dark:text-gray-200 leading-8 text-[17px] tracking-wide text-justify">
                                                 {props.children}
@@ -232,12 +238,12 @@ export const CourseDetail: React.FC = () => {
                     </ReactMarkdown>
                 </div>
 
-            </div>
+            </div >
 
             {/* 4. Sticky Footer */}
-            <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/90 dark:bg-[#0A0A0A]/90 backdrop-blur-lg border-t border-gray-100 dark:border-gray-800 z-40 md:pl-64">
+            < div className="fixed bottom-0 left-0 right-0 p-4 bg-white/90 dark:bg-[#0A0A0A]/90 backdrop-blur-lg border-t border-gray-100 dark:border-gray-800 z-40 md:pl-64" >
                 {/* Note: md:pl-64 handles sidebar on desktop if sidebar exists, simplified here for mobile focus */}
-                <div className="max-w-lg mx-auto flex items-center gap-4">
+                < div className="max-w-lg mx-auto flex items-center gap-4" >
                     <div className="hidden md:block">
                         <p className="text-xs text-text-sub">今日任务</p>
                         <p className="text-sm font-bold text-text-main dark:text-white">阅读并打卡</p>
@@ -259,16 +265,16 @@ export const CourseDetail: React.FC = () => {
                             </>
                         )}
                     </button>
-                </div>
-            </div>
+                </div >
+            </div >
 
             <QuoteShareModal
                 visible={showShareModal}
                 onClose={() => setShowShareModal(false)}
                 lesson={lesson}
-                user={{ nickname: user?.user_metadata?.name || user?.email, avatar_url: user?.user_metadata?.avatar }}
+                user={{ nickname: (user as any)?.user_metadata?.name || (user as any)?.email, avatar_url: (user as any)?.user_metadata?.avatar }}
             />
 
-        </div>
+        </div >
     );
 };
