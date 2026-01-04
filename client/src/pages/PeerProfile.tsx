@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
+import { NavBar } from '@/components/layout/NavBar';
 import { Image } from '@/components/ui/Image'; // Assuming Image component exists or use img
 import { ASSETS } from '@/lib/constants';
 
@@ -82,14 +83,9 @@ export const PeerProfile: React.FC = () => {
     const user = MOCK_USERS[id || ''] || { name: '书友', avatar: ASSETS.DEFAULT_AVATAR, bio: '这位书友很神秘', days: 0 };
 
     return (
-        <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#0A0A0A] pb-24 font-sans">
+        <div className="min-h-full bg-[#FDFDFD] dark:bg-[#0A0A0A] pb-6 font-sans">
             {/* Header */}
-            <div className="px-6 pt-12 pb-6 sticky top-0 bg-[#FDFDFD]/90 dark:bg-[#0A0A0A]/90 backdrop-blur-md z-30 flex items-center gap-4">
-                <button onClick={() => navigate(-1)} className="w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-text-main dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                    <Icon name="arrow_back" />
-                </button>
-                <span className="font-bold text-lg dark:text-white">书友详情</span>
-            </div>
+            <NavBar title="书友详情" />
 
             {/* User Info */}
             <div className="px-6 mb-8 text-center flex flex-col items-center">

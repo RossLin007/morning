@@ -55,13 +55,26 @@ const AppContent: React.FC = () => {
   const hideNavPaths = ['/course/', '/notes/', '/note/new', '/match', '/live', '/settings', '/login', '/relationships', '/membership', '/coach', '/profile/edit', '/history', '/notifications', '/report', '/post/', '/security', '/shop', '/diary', '/insights', '/sessions', '/ceremony', '/favorites', '/my-reading'];
   const showBottomNav = !hideNavPaths.some(path => location.pathname.startsWith(path));
 
+  // Expo Push Token Debugging
+  React.useEffect(() => {
+    const checkToken = setInterval(() => {
+      if (window.expoPushToken) {
+        console.log('🔥 Expo Push Token:', window.expoPushToken);
+        // FIXME: Remove this alert in production after testing
+        alert('Push Token: ' + window.expoPushToken);
+        clearInterval(checkToken);
+      }
+    }, 1000);
+    return () => clearInterval(checkToken);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F2F2EF] dark:bg-[#050505] flex justify-center items-start md:py-8 transition-colors duration-500 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] dark:bg-none bg-fixed">
-      <div className="w-full sm:max-w-md md:max-w-2xl lg:max-w-4xl bg-background-light dark:bg-background-dark min-h-screen md:min-h-[90vh] md:rounded-[40px] md:border-[8px] md:border-white/20 dark:md:border-gray-800/20 shadow-2xl relative overflow-x-hidden overflow-y-auto no-scrollbar flex flex-col">
+      <div className="w-full sm:max-w-md md:max-w-2xl lg:max-w-4xl bg-background-light dark:bg-background-dark h-[100dvh] md:h-[90vh] md:rounded-[40px] md:border-[8px] md:border-white/20 dark:md:border-gray-800/20 shadow-2xl relative overflow-hidden flex flex-col">
         <PWAInstallBanner />
         <RewardsOverlay />
         <ScrollToTop />
-        <div className="flex-1">
+        <div id="main-content" className="flex-1 overflow-y-auto w-full relative no-scrollbar">
           <ErrorBoundary>
             <Routes>
               <Route path="/login" element={<Login />} />
@@ -104,10 +117,10 @@ const AppContent: React.FC = () => {
           </ErrorBoundary>
         </div>
         {showBottomNav && (
-          <>
+          <div className="flex-none z-50 w-full bg-[#F7F7F7] dark:bg-[#111]">
             <GlobalSageTrigger />
             <BottomNav />
-          </>
+          </div>
         )}
       </div>
     </div>

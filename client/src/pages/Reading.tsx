@@ -11,7 +11,7 @@ export const Reading: React.FC = () => {
 
     // Set PWA status bar color to match Native Header
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    useThemeColor(isDark ? '#111111' : '#EDEDED');
+    useThemeColor(isDark ? '#111111' : '#FAFAFA');
 
     // Memoize current lesson
     const currentLesson = React.useMemo(() => {
@@ -24,13 +24,13 @@ export const Reading: React.FC = () => {
         <div className="min-h-screen bg-white dark:bg-[#111] font-sans pb-24">
 
             {/* 1. Header (Native Style - extends into safe-area) */}
-            <header className="fixed top-0 left-0 right-0 z-40 pt-safe bg-[#EDEDED] dark:bg-[#111] transition-transform">
+            <header className="sticky top-0 z-40 pt-safe bg-[#FAFAFA] dark:bg-[#111] transition-transform">
                 <div className="h-[44px] flex items-center justify-center">
                     <h1 className="text-[17px] font-medium text-black dark:text-white tracking-wide">晨读</h1>
                 </div>
             </header>
 
-            <div className="pt-[44px] pb-2">
+            <div className="max-w-md mx-auto px-6">
 
                 {/* 2. Current Course Card */}
                 <section className="px-5 mb-8 mt-2">

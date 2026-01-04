@@ -2,6 +2,7 @@
 import React from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
+import { NavBar } from '@/components/layout/NavBar';
 
 export const DiaryDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
@@ -28,13 +29,8 @@ export const DiaryDetail: React.FC = () => {
     return (
         <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#0A0A0A] pb-24 font-sans">
             {/* Header */}
-            <div className="px-6 pt-12 pb-6 sticky top-0 bg-[#FDFDFD]/90 dark:bg-[#0A0A0A]/90 backdrop-blur-md z-30 flex items-center justify-between">
-                <button onClick={() => navigate(-1)} className="w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-text-main dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                    <Icon name="arrow_back" />
-                </button>
-                <span className="font-bold text-lg dark:text-white">日记详情</span>
-                <div className="w-10"></div>
-            </div>
+            {/* Header */}
+            <NavBar title="日记详情" />
 
             <div className="px-6">
                 {/* Meta Card */}

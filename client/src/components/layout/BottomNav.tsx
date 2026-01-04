@@ -16,31 +16,29 @@ export const BottomNav: React.FC = () => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none md:bottom-8">
-      <div className="bg-[#F7F7F7] dark:bg-[#111] pb-safe w-full sm:max-w-md md:max-w-2xl lg:max-w-4xl pointer-events-auto md:rounded-b-[32px] transition-all duration-300">
-        <div className="flex justify-around items-center h-[60px]">
-          {navItems.map((item, index) => (
-            <React.Fragment key={item.path}>
-              {index === 2 && <div className="w-16 flex-shrink-0" />}
-              <button
-                onClick={() => navigate(item.path)}
-                className={`flex flex-col items-center justify-center w-full h-full gap-0 group ${isActive(item.path)
-                  ? 'text-[#07C160]'
-                  : 'text-[#181818] dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'
-                  }`}
-              >
-                <div className="relative">
-                  <Icon
-                    name={item.icon}
-                    filled={isActive(item.path)}
-                    className="text-[29px]"
-                  />
-                </div>
-                <span className="text-[12px] font-medium">{item.name}</span>
-              </button>
-            </React.Fragment>
-          ))}
-        </div>
+    <div className="w-full bg-[#F7F7F7] dark:bg-[#111] pb-safe transition-all duration-300 border-t border-gray-100 dark:border-gray-800">
+      <div className="flex justify-around items-center h-[60px]">
+        {navItems.map((item, index) => (
+          <React.Fragment key={item.path}>
+            {index === 2 && <div className="w-16 flex-shrink-0" />}
+            <button
+              onClick={() => navigate(item.path)}
+              className={`flex flex-col items-center justify-center w-full h-full gap-0 group ${isActive(item.path)
+                ? 'text-[#07C160]'
+                : 'text-[#181818] dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300'
+                }`}
+            >
+              <div className="relative">
+                <Icon
+                  name={item.icon}
+                  filled={isActive(item.path)}
+                  className="text-[29px]"
+                />
+              </div>
+              <span className="text-[12px] font-normal">{item.name}</span>
+            </button>
+          </React.Fragment>
+        ))}
       </div>
     </div>
   );

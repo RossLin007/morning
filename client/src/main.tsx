@@ -22,6 +22,13 @@ if (!rootElement) {
   throw new Error("Could not find root element to mount to");
 }
 
+// PWA: Disable right-click context menu for native app feel (production only)
+if (import.meta.env.PROD) {
+  document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+  });
+}
+
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>

@@ -22,8 +22,8 @@ interface MenuCellProps {
 const MenuCell: React.FC<MenuCellProps> = ({ icon, iconColor = 'text-gray-600', label, rightText, onClick, isLast }) => (
   <div onClick={onClick} className={`flex items-center justify-between px-5 py-4 bg-white dark:bg-[#191919] active:bg-gray-50 dark:active:bg-white/5 cursor-pointer transition-colors ${!isLast ? 'border-b border-gray-100 dark:border-gray-800' : ''}`}>
     <div className="flex items-center gap-4">
-      <Icon name={icon} className={`text-2xl ${iconColor}`} />
-      <span className="text-base font-medium text-text-main dark:text-white">{label}</span>
+      <Icon name={icon} className={`text-[20px] ${iconColor}`} />
+      <span className="text-base font-normal text-text-main dark:text-white">{label}</span>
     </div>
     <div className="flex items-center gap-2">
       {rightText && <span className="text-sm text-gray-400 dark:text-gray-500">{rightText}</span>}
@@ -48,7 +48,7 @@ export const Profile: React.FC = () => {
   const userAvatar = profile?.avatar || DEFAULT_AVATAR;
 
   return (
-    <div className="min-h-screen bg-[#F0F2F5] dark:bg-[#111] font-sans pb-32">
+    <div className="min-h-full bg-[#F0F2F5] dark:bg-[#111] font-sans pb-6">
 
       {/* 1. Header: Avatar & Mission */}
       <div
@@ -122,6 +122,12 @@ export const Profile: React.FC = () => {
           iconColor="text-indigo-500"
           label="觉察日记"
           onClick={() => navigate('/diary')}
+        />
+        <MenuCell
+          icon="description"
+          iconColor="text-cyan-500"
+          label="我的笔记"
+          onClick={() => navigate('/notes')}
         />
         <MenuCell
           icon="collections_bookmark"

@@ -14,7 +14,7 @@ export const GlobalSageTrigger: React.FC = () => {
     return (
         <>
             {/* The Trigger FAB */}
-            <div className="fixed bottom-[calc(env(safe-area-inset-bottom)+12px)] left-1/2 -translate-x-1/2 z-[60] flex flex-col items-center gap-2">
+            <div className="absolute bottom-[calc(env(safe-area-inset-bottom)+12px)] left-1/2 -translate-x-1/2 z-[60] flex flex-col items-center gap-2">
                 <button
                     onClick={() => setIsOpen(true)}
                     className="size-12 rounded-full bg-white dark:bg-[#1A1A1A] text-primary shadow-lg ring-2 ring-gray-100 dark:ring-gray-800 flex items-center justify-center hover:scale-105 active:scale-95 transition-all duration-300 group"

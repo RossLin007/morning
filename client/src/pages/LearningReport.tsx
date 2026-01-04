@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
+import { NavBar } from '@/components/layout/NavBar';
 import { useGamification } from '@/contexts/GamificationContext';
 
 // --- Mock Data ---
@@ -61,15 +62,15 @@ export const LearningReport: React.FC = () => {
         <div className="min-h-screen bg-[#F9F9F9] dark:bg-[#0A0A0A] font-sans animate-fade-in pb-12 transition-colors duration-500">
 
             {/* Header */}
-            <header className="sticky top-0 z-40 px-6 py-4 flex items-center justify-between bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
-                <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-                    <Icon name="arrow_back" className="text-text-main dark:text-white" />
-                </button>
-                <h1 className="text-lg font-serif font-bold text-text-main dark:text-white">成长回顾</h1>
-                <button className="p-2 -mr-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-                    <Icon name="ios_share" className="text-text-main dark:text-white" />
-                </button>
-            </header>
+            {/* Header */}
+            <NavBar
+                title="成长回顾"
+                right={
+                    <button className="p-2 -mr-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
+                        <Icon name="ios_share" className="text-text-main dark:text-white" />
+                    </button>
+                }
+            />
 
             <div className="p-6 space-y-6 max-w-lg mx-auto">
 

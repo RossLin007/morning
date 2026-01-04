@@ -19,7 +19,7 @@ export const Dashboard: React.FC = () => {
 
     // Set PWA status bar color to match Native Header
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    useThemeColor(isDark ? '#111111' : '#EDEDED');
+    useThemeColor(isDark ? '#111111' : '#FAFAFA');
 
     // Initial Data Loading
     const totalDays = 22;
@@ -94,13 +94,13 @@ export const Dashboard: React.FC = () => {
         <div className="min-h-screen bg-transparent dark:bg-[#0A0A0A] font-sans pb-32 relative">
 
             {/* Top Bar for Sage Identity (Native Header - extends into safe-area) */}
-            <header className="fixed top-0 left-0 right-0 z-40 pt-safe bg-[#EDEDED] dark:bg-[#111]">
+            <header className="sticky top-0 z-40 pt-safe bg-[#FAFAFA] dark:bg-[#111]">
                 <div className="h-[44px] flex items-center justify-center">
                     <h1 className="text-[17px] font-medium text-black dark:text-white tracking-wide">凡人晨读</h1>
                 </div>
             </header>
 
-            <div className="max-w-md mx-auto px-6 pt-[68px]">
+            <div className="max-w-md mx-auto px-6">
 
                 {/* 1. Pinned Section */}
                 <div className="mb-8">

@@ -1,14 +1,14 @@
 {
   "id": "/",
   "name": "凡人晨读",
-  "short_name": "晨读",
+  "short_name": "凡人晨读",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#6B8E8E",
-  "theme_color": "#EDEDED",
+  "background_color": "#FAFAFA",
+  "theme_color": "#FAFAFA",
   "orientation": "portrait-primary",
-  "description": "融合正念、游戏化与AI的习惯养成共修社区。",
+  "description": "凡人晨读，一起早起、读书、谈心的地方。",
   "categories": [
     "education",
     "lifestyle",
@@ -39,6 +39,20 @@
           "type": "image/png"
         }
       ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "screenshot-desktop.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "form_factor": "wide"
     }
   ]
 }

@@ -14,3 +14,8 @@ interface ImportMeta {
   readonly PROD: boolean
   readonly MODE: string
 }
+
+interface Window {
+  expoPushToken?: string;
+  isExpoApp?: boolean;
+}

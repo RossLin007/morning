@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
+import { NavBar } from '@/components/layout/NavBar';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 // --- Fake Data: My Course Library ---
@@ -47,13 +48,8 @@ export const MyReading: React.FC = () => {
         <div className="min-h-screen bg-[#F9F9F9] dark:bg-[#0A0A0A] font-sans pb-24">
 
             {/* Header */}
-            <header className="sticky top-0 z-50 px-6 py-4 flex items-center justify-between bg-white/80 dark:bg-black/80 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
-                <button onClick={() => navigate(-1)} className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 transition-colors">
-                    <Icon name="arrow_back" className="text-gray-600 dark:text-gray-300" />
-                </button>
-                <h1 className="text-lg font-serif font-bold text-gray-800 dark:text-white">我的晨读</h1>
-                <div className="w-10"></div>
-            </header>
+            {/* Header */}
+            <NavBar title="我的晨读" />
 
             <div className="p-6 max-w-lg mx-auto">
 
@@ -64,8 +60,8 @@ export const MyReading: React.FC = () => {
                             key={tab}
                             onClick={() => setActiveTab(tab as any)}
                             className={`flex-1 py-2.5 text-xs font-bold rounded-lg transition-all ${activeTab === tab
-                                    ? 'bg-white dark:bg-[#252525] text-emerald-600 dark:text-emerald-400 shadow-sm'
-                                    : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                                ? 'bg-white dark:bg-[#252525] text-emerald-600 dark:text-emerald-400 shadow-sm'
+                                : 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
                                 }`}
                         >
                             {tab === 'ongoing' ? '正在修习' : '已结业'}

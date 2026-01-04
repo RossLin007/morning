@@ -27,7 +27,7 @@ const Community: React.FC = () => {
 
     // Set PWA status bar color to match Native Header
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    useThemeColor(isDark ? '#111111' : '#EDEDED');
+    useThemeColor(isDark ? '#111111' : '#FAFAFA');
 
     const filteredClassmates = CLASSMATES.filter(c =>
         c.name.includes(searchTerm) || c.bio.includes(searchTerm) || c.term.includes(searchTerm)
@@ -36,10 +36,10 @@ const Community: React.FC = () => {
     // List of classmates (No grouping)
 
     return (
-        <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#0A0A0A] pb-24 font-sans">
+        <div className="min-h-full bg-[#FDFDFD] dark:bg-[#0A0A0A] pb-4 font-sans">
             {/* Header */}
             {/* Header (Native Style - extends into safe-area for PWA) */}
-            <header className="fixed top-0 left-0 right-0 z-40 pt-safe bg-[#EDEDED] dark:bg-[#111] transition-all">
+            <header className="sticky top-0 z-40 pt-safe bg-[#FAFAFA] dark:bg-[#111] transition-all">
                 {!isSearching ? (
                     <div className="relative h-[44px] flex items-center justify-center px-4">
                         <h1 className="text-[17px] font-medium text-black dark:text-white tracking-wide">书友</h1>
@@ -77,7 +77,7 @@ const Community: React.FC = () => {
             </header>
 
             {/* List */}
-            <div className="pt-[44px] pb-2">
+            <div className="pb-2">
                 {filteredClassmates.map((classmate, index) => (
                     <div
                         key={classmate.id}

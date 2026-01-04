@@ -11,6 +11,12 @@
     -webkit-overflow-scrolling: touch;
     /* Ensure no border from Tailwind reset */
     border: 0 !important;
+    /* PWA: Disable long-press text selection for native feel */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
   }
 
   html {
@@ -20,7 +26,7 @@
     height: 100%;
     overflow: hidden;
     /* PWA: Fill status bar area with header color to hide any gap */
-    background-color: #EDEDED;
+    background-color: #FAFAFA;
   }
 
   h1,
