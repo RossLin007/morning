@@ -4,14 +4,18 @@ import { Icon } from '@/components/ui/Icon';
 import { NavBar } from '@/components/layout/NavBar';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useToast } from '@/contexts/ToastContext';
+import { useConfirm } from '@/contexts/ConfirmContext';
 import { useInstallPrompt } from '@/hooks/useInstallPrompt';
 import { useTranslation } from '@/hooks/useTranslation';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const Settings: React.FC = () => {
    const navigate = useNavigate();
    const { showToast } = useToast();
+   const { confirm } = useConfirm();
    const { isInstallable, triggerInstall } = useInstallPrompt();
    const { t } = useTranslation();
+   const { signOut } = useAuth();
 
    // Persistent Settings
    const [notificationsEnabled, setNotificationsEnabled] = useLocalStorage<boolean>('mr_setting_notify', false);
@@ -44,8 +48,15 @@ export const Settings: React.FC = () => {
       }
    };
 
-   const handleClearData = () => {
-      if (window.confirm(t('settings.data.clear_confirm'))) {
+   const handleClearData = async () => {
+      const confirmed = await confirm({
+         title: t('common.confirm'),
+         message: t('settings.data.clear_confirm'),
+         confirmText: t('common.confirm'),
+         cancelText: t('common.cancel'),
+         type: 'danger',
+      });
+      if (confirmed) {
          localStorage.clear();
          showToast(t('settings.data.reset_success'), "success");
          setTimeout(() => {
@@ -195,6 +206,28 @@ export const Settings: React.FC = () => {
                         <p className="text-[10px] text-red-300">{t('settings.data.clear_desc')}</p>
                      </div>
                   </div>
+               </button>
+            </div>
+
+            {/* Section: Logout */}
+            <div className="mb-8">
+               <button
+                  onClick={async () => {
+                     const confirmed = await confirm({
+                        title: t('settings.logout.button'),
+                        message: t('settings.logout.confirm'),
+                        confirmText: t('common.confirm'),
+                        cancelText: t('common.cancel'),
+                        type: 'warning',
+                     });
+                     if (confirmed) {
+                        signOut();
+                        showToast(t('settings.logout.success'), 'success');
+                     }
+                  }}
+                  className="w-full flex items-center justify-center p-4 bg-white dark:bg-[#1A1A1A] rounded-2xl border border-gray-100 dark:border-gray-800 text-red-500 font-bold text-base active:scale-[0.98] transition-transform"
+               >
+                  {t('settings.logout.button')}
                </button>
             </div>
 

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Icon } from '@/components/ui/Icon';
 
-interface SageAvatarProps {
+interface FanAvatarProps {
     className?: string;
     size?: 'sm' | 'md' | 'lg';
 }
 
-export const SageAvatar: React.FC<SageAvatarProps> = ({ className = '', size = 'md' }) => {
+export const FanAvatar: React.FC<FanAvatarProps> = ({ className = '', size = 'md' }) => {
     const sizeClasses = {
         sm: 'w-8 h-8',
         md: 'w-12 h-12',
@@ -20,7 +20,7 @@ export const SageAvatar: React.FC<SageAvatarProps> = ({ className = '', size = '
 
             {/* Avatar Container */}
             <div className="relative w-full h-full rounded-full bg-gradient-to-br from-white to-primary/10 border-2 border-white/50 backdrop-blur-sm overflow-hidden flex items-center justify-center shadow-sm">
-                {/* Simple Sage Face Representation */}
+                {/* Fan Icon */}
                 <div className="text-primary opacity-80">
                     <Icon name="spa" className={size === 'lg' ? 'text-3xl' : size === 'md' ? 'text-2xl' : 'text-lg'} />
                 </div>

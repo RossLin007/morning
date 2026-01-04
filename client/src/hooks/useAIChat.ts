@@ -51,8 +51,8 @@ export const useAIChat = () => {
     enabled: !!currentSessionId,
   });
 
-  // 5. Send Message Logic
-  const sendMessage = useCallback(async (text: string, contextPrompt?: string) => {
+  // 5. Send Message Logic (Native Streaming)
+  const sendMessage = useCallback(async (text: string, _contextPrompt?: string) => {
     if (!user || !text.trim()) return;
 
     // Rate limiting check
@@ -67,11 +67,12 @@ export const useAIChat = () => {
       throw err;
     }
 
-    let sessionId = currentSessionId;
+    let sessionId: string = currentSessionId || '';
     if (!sessionId) {
       const newSession = await createSessionMutation.mutateAsync();
       sessionId = newSession.id;
     }
+    if (!sessionId) return; // Guard: should never happen but satisfies TS
 
     // A. Optimistic User Message
     const userMsgId = crypto.randomUUID();
@@ -85,66 +86,119 @@ export const useAIChat = () => {
     queryClient.setQueryData(['chat_messages', sessionId], (old: ChatMessage[] = []) => [...old, newUserMsg]);
     setIsAiThinking(true);
 
+    // B. Create empty AI message placeholder for streaming
+    const aiMsgId = crypto.randomUUID();
+    queryClient.setQueryData(['chat_messages', sessionId], (old: ChatMessage[] = []) => [
+      ...old,
+      { id: aiMsgId, role: 'model', content: '', created_at: new Date().toISOString() }
+    ]);
+
     try {
-      // B. Save User Message via BFF
+      // C. Save User Message via BFF
       await api.chat.saveMessage(sessionId, {
         role: 'user',
         content: text
       });
 
-      // C. Prepare AI Context
+      // D. Prepare AI Context - use Vercel AI SDK format (role, content)
+      // Server will convert to Google GenAI format (role, parts)
       const historyContext = messages.slice(-10).map(m => ({
-        role: m.role,
-        parts: [{ text: m.content }]
+        role: m.role === 'model' ? 'assistant' : 'user',
+        content: m.content
       }));
 
-      // D. Call AI via BFF
-      const aiResponse = await api.ai.generate(text, contextPrompt, historyContext);
-      
-      const fullResponse = aiResponse.text || "";
-      const sources = aiResponse.sources;
-      const aiMsgId = crypto.randomUUID();
+      // E. Stream AI Response using native fetch
+      const { uniauth } = await import('@/lib/uniauth');
+      const token = await uniauth.getAccessToken();
 
-      // E. Update UI with AI Message
-      queryClient.setQueryData(['chat_messages', sessionId], (old: ChatMessage[] = []) => [
-        ...old,
-        { id: aiMsgId, role: 'model', content: fullResponse, sources }
-      ]);
+      const response = await fetch('/api/genai/stream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          messages: [
+            ...historyContext,
+            { role: 'user', content: text }
+          ]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Request failed: ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('No response body');
+      }
+
+      const decoder = new TextDecoder();
+      let fullResponse = '';
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          if (line.startsWith('0:')) {
+            // Vercel AI Data Stream Protocol: 0:{JSON string}
+            try {
+              const textChunk = JSON.parse(line.slice(2));
+              fullResponse += textChunk;
+              // Update AI message content progressively
+              queryClient.setQueryData(['chat_messages', sessionId], (old: ChatMessage[] = []) =>
+                old.map(msg =>
+                  msg.id === aiMsgId ? { ...msg, content: fullResponse } : msg
+                )
+              );
+            } catch {
+              // Skip invalid JSON
+            }
+          }
+        }
+      }
 
       // F. Save AI Message via BFF
       await api.chat.saveMessage(sessionId, {
         role: 'model',
         content: fullResponse,
-        sources
       });
 
       // G. Update Session Timestamp & Title (if first message)
       if (messages.length === 0) {
-          const title = text.slice(0, 20) + (text.length > 20 ? '...' : '');
-          await api.chat.updateSession(sessionId, { title });
-          queryClient.invalidateQueries({ queryKey: ['chat_sessions'] });
+        const title = text.slice(0, 20) + (text.length > 20 ? '...' : '');
+        await api.chat.updateSession(sessionId, { title });
+        queryClient.invalidateQueries({ queryKey: ['chat_sessions'] });
       } else {
-          await api.chat.updateSession(sessionId, { title: sessions?.find(s => s.id === sessionId)?.title || '对话' });
+        await api.chat.updateSession(sessionId, { title: sessions?.find(s => s.id === sessionId)?.title || '对话' });
       }
 
     } catch (err) {
       console.error('AI Chat Error:', err);
-      queryClient.setQueryData(['chat_messages', sessionId], (old: ChatMessage[] = []) => [
-        ...old,
-        { id: 'error', role: 'model', content: '连接中断，请重试。' }
-      ]);
+      // Update the AI message with error
+      queryClient.setQueryData(['chat_messages', sessionId], (old: ChatMessage[] = []) =>
+        old.map(msg =>
+          msg.id === aiMsgId ? { ...msg, content: '连接中断，请重试。' } : msg
+        )
+      );
     } finally {
       setIsAiThinking(false);
-      queryClient.invalidateQueries({ queryKey: ['chat_messages', sessionId] });
     }
   }, [currentSessionId, user, createSessionMutation, messages, queryClient, sessions]);
 
   const clearHistory = async () => {
-      if (currentSessionId) {
-          await api.chat.deleteSession(currentSessionId);
-          setCurrentSessionId(null);
-          queryClient.invalidateQueries({ queryKey: ['chat_sessions'] });
-      }
+    if (currentSessionId) {
+      await api.chat.deleteSession(currentSessionId);
+      setCurrentSessionId(null);
+      queryClient.invalidateQueries({ queryKey: ['chat_sessions'] });
+    }
   };
 
   return {

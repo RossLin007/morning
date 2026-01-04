@@ -2,7 +2,7 @@ import { TranslationType } from './zh-CN';
 
 export const enUS: TranslationType = {
   common: {
-    loading: 'Loading...', 
+    loading: 'Loading...',
     confirm: 'Confirm',
     cancel: 'Cancel',
     back: 'Back',
@@ -34,16 +34,16 @@ export const enUS: TranslationType = {
     streak_desc: 'You have stayed for <span class="text-orange-400 font-bold">{days}</span> days, beating 85% of students',
     notifications_title: 'Notifications',
     social_ticker: {
-        checkin: '{name} completed Day {day} check-in',
-        join: '{name} joined the room',
-        badge: '{name} earned the [{badge}] badge',
-        focus: '{name} started focusing'
+      checkin: '{name} completed Day {day} check-in',
+      join: '{name} joined the room',
+      badge: '{name} earned the [{badge}] badge',
+      focus: '{name} started focusing'
     },
     quick_actions: {
-        notes: 'Notes',
-        history: 'Footprint',
-        community: 'Community',
-        coach: 'AI Coach'
+      notes: 'Notes',
+      history: 'Footprint',
+      community: 'Community',
+      coach: 'AI Coach'
     },
     announcements: {
       title: 'Announcements',
@@ -70,39 +70,39 @@ export const enUS: TranslationType = {
     edit_profile: 'Edit Profile',
     account_security: 'Security',
     vip: {
-        active_title: 'Morning Reader PRO',
-        inactive_title: 'Upgrade to PRO',
-        active_desc: 'Valid until 2024.12.31',
-        inactive_desc: 'Unlock AI Coach & Cloud Sync'
+      active_title: 'Morning Reader PRO',
+      inactive_title: 'Upgrade to PRO',
+      active_desc: 'Valid until 2024.12.31',
+      inactive_desc: 'Unlock AI Coach & Cloud Sync'
     },
     sections: {
-        learning: 'My Learning',
-        settings: 'Settings',
-        data: 'Data Zone'
+      learning: 'My Learning',
+      settings: 'Settings',
+      data: 'Data Zone'
     },
     menu: {
-        report: 'Learning Report',
-        report_desc: 'View detailed data',
-        relationships: 'Partners & Mentors',
-        relationships_desc: '{count} partners',
-        certificates: 'Certificates',
-        certificates_desc: '{count} unlocked',
-        dark_mode: 'Dark Mode',
-        daily_reminder: 'Daily Reminder',
-        clear_data: 'Reset Data',
-        clear_data_desc: 'Dangerous, cannot be undone',
-        logout: 'Log Out'
+      report: 'Learning Report',
+      report_desc: 'View detailed data',
+      relationships: 'Partners & Mentors',
+      relationships_desc: '{count} partners',
+      certificates: 'Certificates',
+      certificates_desc: '{count} unlocked',
+      dark_mode: 'Dark Mode',
+      daily_reminder: 'Daily Reminder',
+      clear_data: 'Reset Data',
+      clear_data_desc: 'Dangerous, cannot be undone',
+      logout: 'Log Out'
     },
     radar: {
-        grit: 'Grit',
-        wisdom: 'Wisdom',
-        insight: 'Insight',
-        influence: 'Influence',
-        focus: 'Focus'
+      grit: 'Grit',
+      wisdom: 'Wisdom',
+      insight: 'Insight',
+      influence: 'Influence',
+      focus: 'Focus'
     },
     toast: {
-        logout: 'Logged out safely',
-        reminder_saved: 'Reminder settings saved'
+      logout: 'Logged out safely',
+      reminder_saved: 'Reminder settings saved'
     }
   },
   roles: {
@@ -130,7 +130,7 @@ export const enUS: TranslationType = {
     water_success: 'Watered! Bond with {name} +10',
     postcard_sent: 'Postcard sent',
     create_plan: 'Create Learning Plan',
-    learning_plan_dev: 'Feature coming soon...', 
+    learning_plan_dev: 'Feature coming soon...',
     postcard_title: 'Send Postcard',
     postcard_subtitle: 'Give your partner a warm encouragement',
     send_postcard_action: 'Send Now',
@@ -140,15 +140,15 @@ export const enUS: TranslationType = {
     plan_sent: 'Learning plan assigned',
     plan_card_title: 'Learning Plan',
     cards: {
-        morning: 'Good morning! Wish you power today.',
-        persistence: 'Persistence is the greatest quality.',
-        company: 'Thanks for walking with me.',
-        care: 'Remember to rest, take care.'
+      morning: 'Good morning! Wish you power today.',
+      persistence: 'Persistence is the greatest quality.',
+      company: 'Thanks for walking with me.',
+      care: 'Remember to rest, take care.'
     }
   },
   match: {
     title: 'Soul Match',
-    subtitle: 'Resonance Seeking...', 
+    subtitle: 'Resonance Seeking...',
     scan_quote: '"People with the same frequency will meet."',
     high_match: 'High Match',
     similarity: 'Similarity {rate}%',
@@ -156,7 +156,7 @@ export const enUS: TranslationType = {
     establish_pledge: 'Establish {role} Pledge',
     pledge_title: 'The Pledge',
     pledge_subtitle: 'The Pledge of Growth',
-    pledge_content: 'I wish to become {role} with <span class="font-bold text-primary">{name}</span>...', 
+    pledge_content: 'I wish to become {role} with <span class="font-bold text-primary">{name}</span>...',
     signature: 'Signature',
     connect_fail: 'Connection failed'
   },
@@ -164,99 +164,102 @@ export const enUS: TranslationType = {
     find_partner: 'Find Partner',
   },
   coach: {
-      title: 'AI Coach',
-      status_sync: 'Cloud Syncing',
-      status_offline: 'Offline Mode',
-      intro_title: 'I am your 24h growth partner.',
-      action_voice: 'Voice Call',
-      placeholder_online: 'Ask AI Coach (Live Search supported)...',
-      placeholder_offline: 'Disconnected',
-      voice_connecting: 'CONNECTING...', 
-      voice_connected: 'LIVE CONNECTED',
-      voice_listening: 'Listening...', 
-      voice_speaking: 'AI is speaking...', 
-      voice_hangup_hint: 'Click hangup to end call',
-      prompts: {
-          core: 'Core of Effectiveness',
-          procrastination: 'How to overcome procrastination?',
-          plan: 'Make a morning plan',
-          proactive: 'What is Proactive?'
-      },
-      confirm_clear: 'Clear chat history?',
-      error_connection: 'Connection error',
-      error_startup: 'Failed to start voice service'
+    title: 'Fan',
+    status_sync: 'Cloud Syncing',
+    status_offline: 'Offline Mode',
+    intro_title: 'Morning Reader · Your Growth Partner',
+    action_voice: 'Voice Call',
+    placeholder_online: 'Ask me anything about growth...',
+    placeholder_offline: 'Offline Mode',
+    voice_connecting: 'Connecting...',
+    voice_connected: 'Live Voice Connected',
+    voice_listening: 'Listening...',
+    voice_speaking: 'Fan is speaking...',
+    voice_hangup_hint: 'Tap hangup to end call',
+    prompts: {
+      core: 'Core of Effectiveness',
+      procrastination: 'How to overcome procrastination?',
+      plan: 'Make a morning plan',
+      proactive: 'What is Proactive?'
+    },
+    confirm_clear: 'Are you sure you want to clear this chat memory?',
+    login_required: 'Please login first',
+    login_hint: 'Login to chat with Fan',
+    offline_hint: 'Network disconnected, please check your connection',
+    error_connection: 'Connection error',
+    error_startup: 'Failed to start voice service'
   },
   community: {
-      title: 'Community',
-      search_placeholder: 'Search posts...', 
-      publish_modal_title: 'Publish',
-      publish_placeholder: 'What is on your mind...', 
-      upload_image: 'Uploading...', 
-      image_added: 'Image added',
-      check_network: 'Please check network',
-      input_empty: 'Please input content',
-      publish_success: 'Published!',
-      publish_fail: 'Failed to publish',
-      live_banner_title: 'Live: Morning Ritual',
-      live_banner_desc: '{count} partners focusing',
-      share_hint: 'Share your thoughts...', 
-      offline_hint: 'Offline mode',
-      loading_sync: 'Syncing cloud data...', 
-      error_connect: 'Cannot connect to community',
-      retry: 'Retry',
-      empty_search: 'No posts found',
-      empty_list: 'No posts yet',
-      load_more: 'Load more...', 
-      end_of_list: 'End of list',
-      offline_like_error: 'Cannot like in offline mode'
+    title: 'Community',
+    search_placeholder: 'Search posts...',
+    publish_modal_title: 'Publish',
+    publish_placeholder: 'What is on your mind...',
+    upload_image: 'Uploading...',
+    image_added: 'Image added',
+    check_network: 'Please check network',
+    input_empty: 'Please input content',
+    publish_success: 'Published!',
+    publish_fail: 'Failed to publish',
+    live_banner_title: 'Live: Morning Ritual',
+    live_banner_desc: '{count} partners focusing',
+    share_hint: 'Share your thoughts...',
+    offline_hint: 'Offline mode',
+    loading_sync: 'Syncing cloud data...',
+    error_connect: 'Cannot connect to community',
+    retry: 'Retry',
+    empty_search: 'No posts found',
+    empty_list: 'No posts yet',
+    load_more: 'Load more...',
+    end_of_list: 'End of list',
+    offline_like_error: 'Cannot like in offline mode'
   },
   live: {
-      room_title: 'Zen Room',
-      status_connecting: 'CONNECTING...', 
-      status_online: '{count} ONLINE',
-      focus_label: 'Deep Focus',
-      btn_start: 'START',
-      btn_pause: 'PAUSE',
-      breathe_hint: 'BREATHE IN...', 
-      chat_system_init: 'Connecting to Zen field...', 
-      chat_system_conn: 'Connected to Live channel',
-      partner_with: 'With Partner',
-      partner_focus: 'Focusing',
-      partner_nudge_sent: 'Nudge sent',
-      solo_mode: 'Solo Mode',
-      find_partner: 'Find Partner',
-      settings_title: 'Room Settings',
-      setting_scene: 'Scene',
-      setting_ambience: 'Ambience',
-      celebration_title: 'Focus Complete',
-      celebration_desc: 'Mindfulness is food for soul',
-      btn_next_round: 'Next Round',
-      btn_finish: 'Finish',
-      bg: {
-          zen: 'Morning Forest',
-          cyber: 'Digital Void',
-          study: 'Late Night Study'
-      },
-      ambience: {
-          none: 'Mute',
-          rain: 'Rain',
-          forest: 'Forest'
-      }
+    room_title: 'Zen Room',
+    status_connecting: 'CONNECTING...',
+    status_online: '{count} ONLINE',
+    focus_label: 'Deep Focus',
+    btn_start: 'START',
+    btn_pause: 'PAUSE',
+    breathe_hint: 'BREATHE IN...',
+    chat_system_init: 'Connecting to Zen field...',
+    chat_system_conn: 'Connected to Live channel',
+    partner_with: 'With Partner',
+    partner_focus: 'Focusing',
+    partner_nudge_sent: 'Nudge sent',
+    solo_mode: 'Solo Mode',
+    find_partner: 'Find Partner',
+    settings_title: 'Room Settings',
+    setting_scene: 'Scene',
+    setting_ambience: 'Ambience',
+    celebration_title: 'Focus Complete',
+    celebration_desc: 'Mindfulness is food for soul',
+    btn_next_round: 'Next Round',
+    btn_finish: 'Finish',
+    bg: {
+      zen: 'Morning Forest',
+      cyber: 'Digital Void',
+      study: 'Late Night Study'
+    },
+    ambience: {
+      none: 'Mute',
+      rain: 'Rain',
+      forest: 'Forest'
+    }
   },
   shop: {
-      title: 'Zen Shop',
-      subtitle: 'Value your practice',
-      desc: 'Redeem tools or help charity.',
-      balance_error: 'Insufficient Zen Coin',
-      donation_success: 'Thank you for your kindness',
-      redeem_success: 'Redeemed: {item}',
-      loading_more: 'More items coming soon...', 
-      items: {
-          makeup: { title: 'Makeup Card', desc: 'Restore your streak record' },
-          rain: { title: 'Rain Ambience', desc: 'Unlock high quality rain sounds' },
-          tree: { title: 'Plant a Tree', desc: 'Donate coins to plant real trees' },
-          theme: { title: 'Dark Gold', desc: 'Unlock premium app theme' }
-      }
+    title: 'Zen Shop',
+    subtitle: 'Value your practice',
+    desc: 'Redeem tools or help charity.',
+    balance_error: 'Insufficient Zen Coin',
+    donation_success: 'Thank you for your kindness',
+    redeem_success: 'Redeemed: {item}',
+    loading_more: 'More items coming soon...',
+    items: {
+      makeup: { title: 'Makeup Card', desc: 'Restore your streak record' },
+      rain: { title: 'Rain Ambience', desc: 'Unlock high quality rain sounds' },
+      tree: { title: 'Plant a Tree', desc: 'Donate coins to plant real trees' },
+      theme: { title: 'Dark Gold', desc: 'Unlock premium app theme' }
+    }
   },
   tasks: {
     title: 'Tasks',
@@ -289,14 +292,14 @@ export const enUS: TranslationType = {
   },
   reading: {
     title: 'Learning Path',
-    search_placeholder: 'Search courses...', 
+    search_placeholder: 'Search courses...',
     hero: {
       title: 'Mindfulness · Change',
       level: 'Level {level}: Practitioner',
       progress: 'Completed {completed}/{total} lessons'
     },
     chapter: {
-      locked_desc: 'More lessons coming soon...' 
+      locked_desc: 'More lessons coming soon...'
     },
     action: {
       start: 'Start',
@@ -314,7 +317,7 @@ export const enUS: TranslationType = {
       sync_data: 'Sync Data',
       last_sync: 'Last Sync: {time}',
       sync_now: 'Sync Now',
-      syncing: 'Syncing...', 
+      syncing: 'Syncing...',
       success: 'Data synced to cloud'
     },
     preferences: {
@@ -337,6 +340,11 @@ export const enUS: TranslationType = {
     },
     footer: {
       slogan: 'Designed for Mindfulness & Growth'
+    },
+    logout: {
+      button: 'Log Out',
+      confirm: 'Are you sure you want to log out?',
+      success: 'Logged out safely'
     }
   },
   login: {

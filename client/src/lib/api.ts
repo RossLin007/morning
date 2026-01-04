@@ -42,7 +42,7 @@ class ApiClient {
 
         getPost: (id: string) => this.fetch(`/posts/${id}`),
 
-        toggleLike: (postId: string, userId: string) =>
+        toggleLike: (postId: string, _userId: string) =>
             this.fetch(`/posts/${postId}/like`, { method: 'POST' }), // Need to implement this in backend
 
         getComments: (postId: string) => this.fetch(`/posts/${postId}/comments`),
@@ -64,8 +64,8 @@ class ApiClient {
 
     // --- Domain: Profile ---
     public profile = {
-        get: (id: string) => this.fetch('/profile'),
-        update: (id: string, data: any) => this.fetch('/profile', {
+        get: (_id: string) => this.fetch('/profile'),
+        update: (_id: string, data: any) => this.fetch('/profile', {
             method: 'PUT',
             body: JSON.stringify(data)
         }),

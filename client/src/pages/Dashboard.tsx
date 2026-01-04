@@ -6,7 +6,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { useProgress } from '@/hooks/useProgress';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { courseData } from '@/data/courseData';
-import { SageAvatar } from '@/components/sage/SageAvatar';
+import { FanAvatar } from '@/components/fan/FanAvatar';
 import { SmartFeed } from '@/components/dashboard/SmartFeed';
 
 import { FeedCardProps } from '@/components/dashboard/FeedCard';

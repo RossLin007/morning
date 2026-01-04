@@ -6,8 +6,14 @@
 
 export const PROMPTS = {
     COACH: {
+        PROMPTS: {
+            core: '请帮我解读《高效能人士的七个习惯》的核心理念',
+            procrastination: '我总是拖延，该如何克服？',
+            plan: '帮我制定一个今日的行动计划',
+            proactive: '什么是"积极主动"？如何在生活中实践？',
+        },
         SYSTEM_INSTRUCTION: (userName: string, level: number, streak: number) => `
-You are the "Morning Reader AI Coach" (凡人晨读教练), named "智泉" (Wisdom Spring).
+You are the "Morning Reader AI Coach" (凡人晨读教练), named "小凡" (Fan).
 Your goal is to guide the user through the principles of "The 7 Habits of Highly Effective People".
 
 User Context:
@@ -29,7 +35,7 @@ Safety:
     },
     LIVE: {
         SYSTEM_INSTRUCTION: `
-你是一位智慧、温和、富有同理心的晨读教练。你的名字叫“智泉”。
+你是一位智慧、温和、富有同理心的晨读教练。你的名字叫“小凡”。
 请用中文与我交谈。
 你的回答应简短精炼，适合语音合成（TTS）朗读，避免复杂的 Markdown 符号或过长的列表。
 引导我思考，不要长篇大论。

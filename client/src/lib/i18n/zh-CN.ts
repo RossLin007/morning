@@ -33,16 +33,16 @@ export const zhCN = {
     streak_desc: '已连续坚持 <span class="text-orange-400 font-bold">{days}</span> 天，击败了 85% 的同学',
     notifications_title: 'Notifications',
     social_ticker: {
-        checkin: '{name} 完成了 Day {day} 打卡',
-        join: '{name} 加入了早读室',
-        badge: '{name} 获得了【{badge}】徽章',
-        focus: '{name} 开始了专注'
+      checkin: '{name} 完成了 Day {day} 打卡',
+      join: '{name} 加入了早读室',
+      badge: '{name} 获得了【{badge}】徽章',
+      focus: '{name} 开始了专注'
     },
     quick_actions: {
-        notes: '笔记',
-        history: '足迹',
-        community: '共修',
-        coach: 'AI教练'
+      notes: '笔记',
+      history: '足迹',
+      community: '共修',
+      coach: 'AI教练'
     },
     announcements: {
       title: '系统通知',
@@ -69,39 +69,39 @@ export const zhCN = {
     edit_profile: '编辑资料',
     account_security: '账号安全',
     vip: {
-        active_title: 'Morning Reader PRO',
-        inactive_title: '升级至 PRO 会员',
-        active_desc: '有效期至 2024.12.31',
-        inactive_desc: '解锁 AI 教练与无限云同步'
+      active_title: 'Morning Reader PRO',
+      inactive_title: '升级至 PRO 会员',
+      active_desc: '有效期至 2024.12.31',
+      inactive_desc: '解锁 AI 教练与无限云同步'
     },
     sections: {
-        learning: 'My Learning',
-        settings: 'Settings',
-        data: 'Data Zone'
+      learning: 'My Learning',
+      settings: 'Settings',
+      data: 'Data Zone'
     },
     menu: {
-        report: '学习报告',
-        report_desc: '查看详细数据',
-        relationships: '同修与导师',
-        relationships_desc: '已结伴 {count} 位',
-        certificates: '我的证书',
-        certificates_desc: '已解锁 {count} 枚',
-        dark_mode: '深色模式',
-        daily_reminder: '每日提醒',
-        clear_data: '重置所有数据',
-        clear_data_desc: '不可恢复，慎重操作',
-        logout: '退出登录'
+      report: '学习报告',
+      report_desc: '查看详细数据',
+      relationships: '同修与导师',
+      relationships_desc: '已结伴 {count} 位',
+      certificates: '我的证书',
+      certificates_desc: '已解锁 {count} 枚',
+      dark_mode: '深色模式',
+      daily_reminder: '每日提醒',
+      clear_data: '重置所有数据',
+      clear_data_desc: '不可恢复，慎重操作',
+      logout: '退出登录'
     },
     radar: {
-        grit: '恒毅力',
-        wisdom: '智慧',
-        insight: '洞察',
-        influence: '影响',
-        focus: '专注'
+      grit: '恒毅力',
+      wisdom: '智慧',
+      insight: '洞察',
+      influence: '影响',
+      focus: '专注'
     },
     toast: {
-        logout: '已安全退出',
-        reminder_saved: '提醒设置已保存'
+      logout: '已安全退出',
+      reminder_saved: '提醒设置已保存'
     }
   },
   roles: {
@@ -138,13 +138,13 @@ export const zhCN = {
     assign_action: '发布计划',
     plan_sent: '学习计划已发布',
     plan_card_title: '学习计划',
-    
+
     // Postcards Content
     cards: {
-        morning: '早安！愿你今天充满力量。',
-        persistence: '坚持是世间最伟大的品质。',
-        company: '共修路上，感谢有你同行。',
-        care: '记得休息，照顾好自己。'
+      morning: '早安！愿你今天充满力量。',
+      persistence: '坚持是世间最伟大的品质。',
+      company: '共修路上，感谢有你同行。',
+      care: '记得休息，照顾好自己。'
     }
   },
   match: {
@@ -165,99 +165,99 @@ export const zhCN = {
     find_partner: '寻找共修伙伴',
   },
   coach: {
-      title: 'AI 晨读教练',
-      status_sync: '云端同步中',
-      status_offline: '离线模式',
-      intro_title: '我是你的 24h 成长伙伴。',
-      action_voice: '语音通话',
-      placeholder_online: '问问 AI 教练 (支持实时搜索)...',
-      placeholder_offline: '连接已断开',
-      voice_connecting: 'CONNECTING...',
-      voice_connected: 'LIVE CONNECTED',
-      voice_listening: 'Listening...',
-      voice_speaking: 'AI is speaking...',
-      voice_hangup_hint: '点击挂断按钮结束通话',
-      prompts: {
-          core: '解读《高效能》核心',
-          procrastination: '如何克服拖延？',
-          plan: '制定晨读计划',
-          proactive: '什么是积极主动？'
-      },
-      confirm_clear: '确定要删除当前对话历史吗？',
-      error_connection: '连接发生错误',
-      error_startup: '无法启动语音服务'
+    title: '小凡',
+    placeholder_online: '问我任何关于成长的问题...',
+    placeholder_offline: '离线模式',
+    intro_title: '凡人晨读 · 你的成长伙伴',
+    voice_listening: '正在聆听...',
+    voice_speaking: '小凡正在说话...',
+    voice_connecting: '连接中...',
+    voice_connected: '实时语音已连接',
+    voice_hangup_hint: '点击挂断结束通话',
+    confirm_clear: '确定要清除这段对话记忆吗？',
+    login_required: '请先登录',
+    login_hint: '登录后即可与小凡对话',
+    offline_hint: '网络连接断开，请检查网络后重试',
+    prompts: {
+      core: '解读《高效能》核心',
+      procrastination: '如何克服拖延？',
+      plan: '制定晨读计划',
+      proactive: '什么是积极主动？'
+    },
+    error_connection: '连接发生错误',
+    error_startup: '无法启动语音服务'
   },
   community: {
-      title: '共修广场',
-      search_placeholder: '搜索动态...',
-      publish_modal_title: '发布动态',
-      publish_placeholder: '这一刻的想法...',
-      upload_image: '图片上传中...',
-      image_added: '图片已添加',
-      check_network: '请检查网络连接',
-      input_empty: '请输入内容',
-      publish_success: '发布成功！',
-      publish_fail: '发布失败，请重试',
-      live_banner_title: '正在直播: 晨间共修',
-      live_banner_desc: '{count} 位伙伴正在专注 • 点击加入',
-      share_hint: '分享你的修行感悟...',
-      offline_hint: '离线模式，暂无法发布',
-      loading_sync: '正在同步云端数据...',
-      error_connect: '无法连接到社区',
-      retry: '重试',
-      empty_search: '未找到相关动态',
-      empty_list: '暂无动态，来发布第一条吧',
-      load_more: '加载更多...',
-      end_of_list: '已达彼岸，暂无更多',
-      offline_like_error: '离线模式下无法点赞'
+    title: '共修广场',
+    search_placeholder: '搜索动态...',
+    publish_modal_title: '发布动态',
+    publish_placeholder: '这一刻的想法...',
+    upload_image: '图片上传中...',
+    image_added: '图片已添加',
+    check_network: '请检查网络连接',
+    input_empty: '请输入内容',
+    publish_success: '发布成功！',
+    publish_fail: '发布失败，请重试',
+    live_banner_title: '正在直播: 晨间共修',
+    live_banner_desc: '{count} 位伙伴正在专注 • 点击加入',
+    share_hint: '分享你的修行感悟...',
+    offline_hint: '离线模式，暂无法发布',
+    loading_sync: '正在同步云端数据...',
+    error_connect: '无法连接到社区',
+    retry: '重试',
+    empty_search: '未找到相关动态',
+    empty_list: '暂无动态，来发布第一条吧',
+    load_more: '加载更多...',
+    end_of_list: '已达彼岸，暂无更多',
+    offline_like_error: '离线模式下无法点赞'
   },
   live: {
-      room_title: '晨间共修',
-      status_connecting: 'CONNECTING...',
-      status_online: '{count} ONLINE',
-      focus_label: 'Deep Focus',
-      btn_start: 'START',
-      btn_pause: 'PAUSE',
-      breathe_hint: 'BREATHE IN...',
-      chat_system_init: '正在连接共修能量场...',
-      chat_system_conn: '已连接至实时共修频道',
-      partner_with: 'With Partner',
-      partner_focus: '专注中',
-      partner_nudge_sent: '已发送专注提醒',
-      solo_mode: 'Solo Mode',
-      find_partner: '寻找共修伙伴',
-      settings_title: '房间设置',
-      setting_scene: '场景',
-      setting_ambience: '环境音',
-      celebration_title: '专注完成',
-      celebration_desc: '静心时刻，是灵魂的补给',
-      btn_next_round: '开始下一轮',
-      btn_finish: '结束专注',
-      bg: {
-          zen: '晨曦山林',
-          cyber: '数字虚空',
-          study: '深夜书房'
-      },
-      ambience: {
-          none: '静音',
-          rain: '细雨',
-          forest: '森林'
-      }
+    room_title: '晨间共修',
+    status_connecting: 'CONNECTING...',
+    status_online: '{count} ONLINE',
+    focus_label: 'Deep Focus',
+    btn_start: 'START',
+    btn_pause: 'PAUSE',
+    breathe_hint: 'BREATHE IN...',
+    chat_system_init: '正在连接共修能量场...',
+    chat_system_conn: '已连接至实时共修频道',
+    partner_with: 'With Partner',
+    partner_focus: '专注中',
+    partner_nudge_sent: '已发送专注提醒',
+    solo_mode: 'Solo Mode',
+    find_partner: '寻找共修伙伴',
+    settings_title: '房间设置',
+    setting_scene: '场景',
+    setting_ambience: '环境音',
+    celebration_title: '专注完成',
+    celebration_desc: '静心时刻，是灵魂的补给',
+    btn_next_round: '开始下一轮',
+    btn_finish: '结束专注',
+    bg: {
+      zen: '晨曦山林',
+      cyber: '数字虚空',
+      study: '深夜书房'
+    },
+    ambience: {
+      none: '静音',
+      rain: '细雨',
+      forest: '森林'
+    }
   },
   shop: {
-      title: '灵性商店',
-      subtitle: '让修行产生价值',
-      desc: '兑换工具，或助力公益。',
-      balance_error: 'Zen Coin 不足，请继续修行',
-      donation_success: '感谢您的善举，证书已发放',
-      redeem_success: '已兑换：{item}',
-      loading_more: '更多商品正在进货中...',
-      items: {
-          makeup: { title: '补签卡', desc: '恢复中断的打卡连续记录' },
-          rain: { title: '雨声白噪音', desc: '解锁高品质沉浸式雨声' },
-          tree: { title: '种一棵树', desc: '捐赠积分，我们在沙漠种真树' },
-          theme: { title: '暗夜鎏金', desc: '解锁尊贵黑金应用主题' }
-      }
+    title: '灵性商店',
+    subtitle: '让修行产生价值',
+    desc: '兑换工具，或助力公益。',
+    balance_error: 'Zen Coin 不足，请继续修行',
+    donation_success: '感谢您的善举，证书已发放',
+    redeem_success: '已兑换：{item}',
+    loading_more: '更多商品正在进货中...',
+    items: {
+      makeup: { title: '补签卡', desc: '恢复中断的打卡连续记录' },
+      rain: { title: '雨声白噪音', desc: '解锁高品质沉浸式雨声' },
+      tree: { title: '种一棵树', desc: '捐赠积分，我们在沙漠种真树' },
+      theme: { title: '暗夜鎏金', desc: '解锁尊贵黑金应用主题' }
+    }
   },
   tasks: {
     title: '学习任务',
@@ -338,6 +338,11 @@ export const zhCN = {
     },
     footer: {
       slogan: 'Designed for Mindfulness & Growth'
+    },
+    logout: {
+      button: '退出登录',
+      confirm: '确定要退出当前账号吗？',
+      success: '已安全退出'
     }
   },
   login: {

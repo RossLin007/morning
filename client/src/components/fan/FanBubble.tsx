@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
-interface SageBubbleProps {
+interface FanBubbleProps {
     text: string;
     className?: string;
 }
 
-export const SageBubble: React.FC<SageBubbleProps> = ({ text, className = '' }) => {
+export const FanBubble: React.FC<FanBubbleProps> = ({ text, className = '' }) => {
     const [displayedText, setDisplayedText] = useState('');
 
     // Simple typing effect

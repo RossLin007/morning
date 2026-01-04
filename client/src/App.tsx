@@ -2,10 +2,11 @@
 import React from 'react';
 import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { BottomNav } from '@/components/layout/BottomNav';
-import { GlobalSageTrigger } from '@/components/sage/GlobalSageTrigger';
+import { GlobalFanTrigger } from '@/components/fan/GlobalFanTrigger';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { GamificationProvider } from '@/contexts/GamificationContext';
 import { ToastProvider } from '@/contexts/ToastContext';
+import { ConfirmProvider } from '@/contexts/ConfirmContext';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { ProtectedRoute } from '@/components/ui/ProtectedRoute';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -32,8 +33,7 @@ import { History } from '@/pages/History';
 import { Achievements } from '@/pages/Achievements';
 import { LearningReport } from '@/pages/LearningReport';
 import { Membership } from '@/pages/Membership';
-import { AICoach } from '@/pages/AICoach';
-import { SageChat } from '@/pages/SageChat';
+import { FanChat } from '@/pages/FanChat';
 import { Notifications } from '@/pages/Notifications';
 import { ZenShop } from '@/pages/ZenShop';
 import { Settings } from '@/pages/Settings';
@@ -52,7 +52,7 @@ import { MyReading } from '@/pages/MyReading';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
-  const hideNavPaths = ['/course/', '/notes/', '/note/new', '/match', '/live', '/settings', '/login', '/relationships', '/membership', '/coach', '/profile/edit', '/history', '/notifications', '/report', '/post/', '/security', '/shop', '/diary', '/insights', '/sessions', '/ceremony', '/favorites', '/my-reading'];
+  const hideNavPaths = ['/course/', '/notes/', '/note/new', '/match', '/live', '/settings', '/login', '/relationships', '/membership', '/coach', '/profile/edit', '/history', '/notifications', '/report', '/post/', '/security', '/shop', '/diary', '/insights', '/sessions', '/ceremony', '/favorites', '/my-reading', '/fan'];
   const showBottomNav = !hideNavPaths.some(path => location.pathname.startsWith(path));
 
   // Expo Push Token Debugging
@@ -104,8 +104,9 @@ const AppContent: React.FC = () => {
               <Route path="/note/new" element={<ProtectedRoute><NoteEditor /></ProtectedRoute>} />
               <Route path="/membership" element={<ProtectedRoute><Membership /></ProtectedRoute>} />
               <Route path="/shop" element={<ProtectedRoute><ZenShop /></ProtectedRoute>} />
-              <Route path="/coach" element={<ProtectedRoute><AICoach /></ProtectedRoute>} />
-              <Route path="/chat" element={<ProtectedRoute><SageChat /></ProtectedRoute>} />
+              <Route path="/coach" element={<ProtectedRoute><FanChat /></ProtectedRoute>} />
+              <Route path="/fan" element={<ProtectedRoute><FanChat /></ProtectedRoute>} />
+              <Route path="/ai-coach" element={<ProtectedRoute><FanChat /></ProtectedRoute>} />
               <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
               <Route path="/sessions" element={<ProtectedRoute><PastSessions /></ProtectedRoute>} />
               <Route path="/ceremony/opening" element={<ProtectedRoute><OpeningCeremony /></ProtectedRoute>} />
@@ -118,7 +119,7 @@ const AppContent: React.FC = () => {
         </div>
         {showBottomNav && (
           <div className="flex-none z-50 w-full bg-[#F7F7F7] dark:bg-[#111]">
-            <GlobalSageTrigger />
+            <GlobalFanTrigger />
             <BottomNav />
           </div>
         )}
@@ -132,11 +133,13 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ToastProvider>
-          <GamificationProvider>
-            <Router>
-              <AppContent />
-            </Router>
-          </GamificationProvider>
+          <ConfirmProvider>
+            <GamificationProvider>
+              <Router>
+                <AppContent />
+              </Router>
+            </GamificationProvider>
+          </ConfirmProvider>
         </ToastProvider>
       </AuthProvider>
     </QueryClientProvider>
