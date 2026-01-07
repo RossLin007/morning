@@ -4,7 +4,6 @@ import { NavBar } from '@/components/layout/NavBar';
 import { useHaptics } from '@/hooks/useHaptics';
 
 export const Notifications: React.FC = () => {
-    const navigate = useNavigate();
     const { trigger: haptic } = useHaptics();
     const [filter, setFilter] = useState<'all' | 'system' | 'interaction'>('all');
 

@@ -16,11 +16,11 @@ interface IconProps {
 /**
  * Icon component using Google Material Symbols.
  * Optimized for mobile with OPSZ 24 (optical size for small icons)
- * and wght 400 (standard weight for clarity).
+ * and wght 200 (standard weight for clarity).
  */
 export const Icon: React.FC<IconProps> = ({ name, className = '', filled = false, label, onClick }) => {
-  // Mobile-optimized settings: OPSZ 24 for tab bar icons, wght 400 for clarity
-  const baseSettings = "'OPSZ' 24, 'wght' 400";
+  // Mobile-optimized settings: OPSZ 24 for tab bar icons, wght 200 for clarity
+  const baseSettings = "'OPSZ' 24, 'wght' 300";
   const fillSetting = filled ? ", 'FILL' 1" : "";
 
   return (

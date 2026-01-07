@@ -149,8 +149,8 @@ export const NoteEditor: React.FC = () => {
             const newPost: Post = {
                 id: Date.now().toString(),
                 user: {
-                    name: user?.user_metadata?.name || '我',
-                    avatar: user?.user_metadata?.avatar || ASSETS.DEFAULT_AVATAR,
+                    name: user?.nickname || '我',
+                    avatar: user?.avatar_url || ASSETS.PLACEHOLDER_IMAGE,
                     level: 3
                 },
                 content: `${currentTitle ? `【${currentTitle}】\n` : ''}${currentContent}`,
@@ -250,7 +250,7 @@ export const NoteEditor: React.FC = () => {
                             {...register('content')}
                             ref={(e) => {
                                 register('content').ref(e);
-                                textareaRef.current = e;
+                                (textareaRef as React.MutableRefObject<HTMLTextAreaElement | null>).current = e;
                             }}
                             placeholder="写下你的感悟 (支持 Markdown)..."
                             className="flex-1 w-full resize-none text-base text-text-main dark:text-gray-200 bg-transparent border-none outline-none placeholder-gray-300 dark:placeholder-gray-700 leading-relaxed font-mono"

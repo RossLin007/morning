@@ -82,17 +82,17 @@ const Community: React.FC = () => {
                     <div
                         key={classmate.id}
                         onClick={() => navigate(`/user/${classmate.id}`)}
-                        className={`flex items-center gap-4 px-6 py-4 bg-white dark:bg-[#191919] cursor-pointer active:bg-gray-50 dark:active:bg-white/5 transition-colors ${index !== filteredClassmates.length - 1 ? 'border-b border-gray-50 dark:border-gray-800' : ''
+                        className={`flex items-center gap-4 px-4 py-3 bg-white dark:bg-[#191919] cursor-pointer active:bg-gray-50 dark:active:bg-white/5 transition-colors ${index !== filteredClassmates.length - 1 ? 'border-b border-gray-100 dark:border-gray-800' : ''
                             }`}
                     >
                         <img
                             src={classmate.avatar}
                             alt={classmate.name}
-                            className="w-10 h-10 rounded-md object-cover bg-gray-100"
+                            className="w-12 h-12 rounded-md object-cover bg-gray-100"
                         />
                         <div className="flex-1 min-w-0">
-                            <h3 className="font-medium text-text-main dark:text-white text-base truncate leading-tight">{classmate.name}</h3>
-                            <p className="text-xs text-gray-400 dark:text-gray-500 truncate mt-0.5">{classmate.bio}</p>
+                            <h3 className="font-medium text-text-main dark:text-white text-[16px] truncate leading-tight">{classmate.name}</h3>
+                            <p className="text-[13px] text-gray-400 dark:text-gray-500 truncate mt-1">{classmate.bio}</p>
                         </div>
                         <Icon name="chevron_right" className="text-gray-300 dark:text-gray-600 text-lg" />
                     </div>

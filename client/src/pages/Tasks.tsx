@@ -78,7 +78,7 @@ export const Tasks: React.FC = () => {
   const finishRecording = async () => {
     stopRecord();
     await completeTask('t2'); // Done
-    await addCheckin(); // Add today to calendar
+    await addCheckin(undefined); // Add today to calendar
 
     setShowRecorder(false);
     showToast(t('tasks.action.checkin_success'), "success");

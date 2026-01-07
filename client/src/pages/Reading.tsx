@@ -1,159 +1,245 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
 import { useProgress } from '@/hooks/useProgress';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { courseData } from '@/data/courseData';
 
+// Standard List Cell Component
+interface LessonCellProps {
+    lesson: any;
+    isCompleted: boolean;
+    isCurrent: boolean;
+    isLocked: boolean;
+    onClick: () => void;
+    isLast: boolean;
+}
+
+const LessonCell: React.FC<LessonCellProps> = ({ lesson, isCompleted, isCurrent, isLocked, onClick, isLast }) => {
+    return (
+        <div
+            onClick={!isLocked ? onClick : undefined}
+            className={`
+                flex items-center gap-4 px-5 py-4 bg-white dark:bg-[#191919] 
+                ${!isLocked ? 'cursor-pointer active:bg-gray-50 dark:active:bg-white/5' : 'opacity-60'}
+                transition-colors
+                ${!isLast ? 'border-b border-gray-100 dark:border-gray-800' : ''}
+            `}
+        >
+            {/* Status Icon */}
+            <div className="shrink-0">
+                {isCompleted ? (
+                    <Icon name="check_circle" className="text-[22px] text-emerald-500" />
+                ) : isCurrent ? (
+                    <Icon name="play_circle" className="text-[22px] text-primary" />
+                ) : isLocked ? (
+                    <Icon name="lock" className="text-[20px] text-gray-300 dark:text-gray-600" />
+                ) : (
+                    <Icon name="radio_button_unchecked" className="text-[20px] text-gray-300 dark:text-gray-600" />
+                )}
+            </div>
+
+            {/* Content */}
+            <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-0.5">
+                    <h3 className={`text-[18px] font-bold leading-tight ${isCurrent ? 'text-primary' : 'text-gray-900 dark:text-white'}`}>
+                        {lesson.title}
+                    </h3>
+                    {isCurrent && (
+                        <span className="text-[10px] px-1.5 py-0.5 bg-primary/10 text-primary rounded-full">进行中</span>
+                    )}
+                </div>
+                <p className="text-[13px] text-gray-500 dark:text-gray-400 truncate">
+                    Day {lesson.day} · {lesson.duration}
+                </p>
+            </div>
+
+            {/* Right Arrow */}
+            {!isLocked && (
+                <Icon name="chevron_right" className="text-gray-300 dark:text-gray-600 text-lg shrink-0" />
+            )}
+        </div>
+    );
+};
+
+// Header Menu Component
+const HeaderMenu: React.FC = () => {
+    const [isOpen, setIsOpen] = React.useState(false);
+    const menuRef = React.useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
+
+    React.useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleAction = (action: string) => {
+        console.log(`Menu Action: ${action}`);
+        setIsOpen(false);
+        if (action === 'start') {
+            navigate('/initiate');
+        } else if (action === 'mode') {
+            navigate('/understand');
+        }
+    };
+
+    return (
+        <div className="absolute right-4 top-1/2 -translate-y-[calc(50%-4px)] flex items-center" ref={menuRef}>
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="p-2 -mr-2 text-gray-400 dark:text-gray-500 active:scale-95 transition-transform rounded-full hover:bg-gray-100 dark:hover:bg-white/10"
+            >
+                <Icon name="more_vert" className="text-[22px]" />
+            </button>
+
+            {isOpen && (
+                <div className="absolute right-0 top-full mt-2 w-auto whitespace-nowrap bg-white dark:bg-[#222] rounded-xl shadow-xl border border-gray-100 dark:border-gray-800 py-1 z-50 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
+                    <button
+                        onClick={() => handleAction('start')}
+                        className="w-full px-4 py-2.5 text-left text-[14px] text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 flex items-center gap-2.5"
+                    >
+                        <Icon name="add_circle_outline" className="text-[18px]" style={{ color: '#bfcad4', fontVariationSettings: "'wght' 300" }} />
+                        发起晨读
+                    </button>
+                    <div className="h-[1px] bg-gray-100 dark:bg-gray-800 mx-3.5" />
+                    <button
+                        onClick={() => handleAction('mode')}
+                        className="w-full px-4 py-2.5 text-left text-[14px] text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 flex items-center gap-2.5"
+                    >
+                        <Icon name="info" className="text-[18px]" style={{ color: '#bfcad4', fontVariationSettings: "'wght' 300" }} />
+                        了解模式
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+};
+
 export const Reading: React.FC = () => {
     const navigate = useNavigate();
     const { completedLessons, isLoading } = useProgress();
 
-    // Set PWA status bar color to match Native Header
+    // Set Header Color
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    useThemeColor(isDark ? '#111111' : '#FAFAFA');
+    useThemeColor(isDark ? '#191919' : '#FFFFFF');
 
     // Memoize current lesson
-    const currentLesson = React.useMemo(() => {
+    const currentLesson = useMemo(() => {
         return courseData.flatMap(c => c.lessons).find(l => !completedLessons.includes(l.id));
     }, [completedLessons]);
 
     if (isLoading) return null;
 
     return (
-        <div className="min-h-screen bg-white dark:bg-[#111] font-sans pb-24">
+        <div className="min-h-screen bg-[#F0F2F5] dark:bg-[#111] font-sans pb-24">
 
-            {/* 1. Header (Native Style - extends into safe-area) */}
-            <header className="sticky top-0 z-40 pt-safe bg-[#FAFAFA] dark:bg-[#111] transition-transform">
-                <div className="h-[44px] flex items-center justify-center">
+            <header className="sticky top-0 z-40 pt-safe bg-white dark:bg-[#191919] border-b border-gray-100 dark:border-[#222]">
+                <div className="h-[44px] flex items-center justify-center relative px-4">
                     <h1 className="text-[17px] font-medium text-black dark:text-white tracking-wide">晨读</h1>
+                    <HeaderMenu />
                 </div>
             </header>
 
-            <div className="max-w-md mx-auto px-6">
+            {/* 2. Today's Hero Card */}
+            {currentLesson && (
+                <div className="px-4 mt-4 mb-4">
+                    <div
+                        onClick={() => navigate(`/course/${currentLesson.id}`)}
+                        className="relative rounded-2xl overflow-hidden cursor-pointer active:scale-[0.98] transition-transform shadow-lg aspect-video"
+                    >
+                        {/* Background Image - Bright Nature */}
+                        <div className="absolute inset-0">
+                            <img
+                                src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80"
+                                alt=""
+                                className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                        </div>
 
-                {/* 2. Current Course Card */}
-                <section className="px-5 mb-8 mt-2">
-                    <div className="bg-white dark:bg-[#191919] rounded-[24px] p-6 shadow-sm border border-gray-100 dark:border-gray-800 relative overflow-hidden">
-                        {currentLesson ? (
-                            <>
-                                <div className="relative z-10">
-                                    <div className="flex items-center gap-2 mb-4">
-                                        <span className="text-[11px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 dark:text-emerald-400 px-2.5 py-1 rounded-full">进行中</span>
-                                        <span className="text-xs text-gray-400">Day {currentLesson.day}</span>
-                                    </div>
-
-                                    <h2 className="text-xl font-bold text-text-main dark:text-white mb-3 leading-tight">
-                                        {currentLesson.title}
-                                    </h2>
-                                    <p className="text-[15px] leading-relaxed text-gray-500 dark:text-gray-400 mb-6 line-clamp-2">
-                                        {currentLesson.quote?.text || '开启今天的智慧之旅，重塑你的思维习惯。'}
-                                    </p>
-
-                                    <button
-                                        onClick={() => navigate(`/course/${currentLesson.id}`)}
-                                        className="w-full py-3.5 rounded-xl bg-[#6B8E8E] text-white font-medium text-[15px] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
-                                    >
-                                        <Icon name="play_arrow" className="text-lg" />
-                                        开始今日晨读
-                                    </button>
-                                </div>
-                            </>
-                        ) : (
-                            <div className="text-center py-8">
-                                <Icon name="emoji_events" className="text-4xl text-yellow-500 mb-2" />
-                                <h3 className="text-lg font-bold text-text-main dark:text-white">所有课程已完成</h3>
-                                <p className="text-xs text-gray-400 mt-1">温故而知新，可以回头复习哦</p>
+                        {/* Content Container */}
+                        <div className="relative h-full px-6 flex flex-col justify-center">
+                            {/* Left Content - Bottom Aligned */}
+                            <div className="pr-12 z-10">
+                                <h2 className="text-[22px] font-bold text-white leading-tight mb-2 mt-2">
+                                    {currentLesson.title}
+                                </h2>
+                                <p className="text-[14px] text-white/70 mb-3 leading-relaxed">
+                                    {(currentLesson.quote?.text || '每一个清晨，都是重塑自我的开始').split(/([，,。.;；?!？！\s])/).map((part, index) => (
+                                        <React.Fragment key={index}>
+                                            {part}
+                                            {/[，,。.;；?!？！\s]/.test(part) && <br />}
+                                        </React.Fragment>
+                                    ))}
+                                </p>
+                                <span className="text-[12px] text-white/60">Day {currentLesson.day} · {currentLesson.duration || '约10分钟'}</span>
                             </div>
-                        )}
+
+                            {/* Right Arrow Icon (Absolute Center Right) */}
+                            <div className="absolute right-6 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center">
+                                <Icon name="chevron_right" className="text-[32px] text-white/90" />
+                            </div>
+                        </div>
                     </div>
-                </section>
+                </div>
+            )}
 
-                {/* 3. Course Directory (Edge-to-Edge, Always Expanded) */}
-                <section>
-                    <div className="border-t border-gray-100 dark:border-gray-800">
-                        {courseData.map((chapter, index) => {
-                            const chapterLessons = chapter.lessons;
-                            const completedInChapter = chapterLessons.filter(l => completedLessons.includes(l.id)).length;
-                            const totalInChapter = chapterLessons.length;
-                            const progress = Math.round((completedInChapter / totalInChapter) * 100);
-                            const isLocked = chapter.isLocked && completedLessons.length < (index * 7);
+            {/* 3. Course List (Grouped) */}
+            <div className="pb-10">
+                {courseData.map((chapter) => {
+                    const chapterLessons = chapter.lessons;
+                    // Determine lock state based on previous chapter completion
+                    // Simplified logic: Check if all lessons in previous chapters are done
+                    const firstLessonDay = chapterLessons[0].day;
+                    const isChapterLocked = chapter.isLocked && completedLessons.length < (firstLessonDay - 1);
 
-                            return (
-                                <div key={chapter.id} className="bg-white dark:bg-[#111]">
+                    // Simple Stats
+                    const completedInChapter = chapterLessons.filter(l => completedLessons.includes(l.id)).length;
 
-                                    {/* Chapter Header (Static) */}
-                                    <div
-                                        className={`px-5 py-4 flex items-center justify-between border-b border-gray-50 dark:border-gray-800
-                                            ${isLocked ? 'opacity-60 grayscale' : ''}
-                                        `}
-                                    >
-                                        <div className="flex items-center gap-4">
-                                            <div className={`size-10 rounded-full flex items-center justify-center text-[11px] font-bold border-2 shrink-0
-                                          ${progress === 100
-                                                    ? 'bg-emerald-50 text-emerald-600 border-emerald-100 dark:bg-emerald-900/20 dark:border-emerald-900/20'
-                                                    : 'bg-gray-50 text-gray-500 border-gray-100 dark:bg-gray-800 dark:border-gray-700'
-                                                }`}>
-                                                {isLocked ? <Icon name="lock" className="text-sm" /> : (progress === 100 ? <Icon name="check" className="text-sm" /> : `${progress}%`)}
-                                            </div>
-                                            <div>
-                                                <h4 className="text-[16px] font-medium text-text-main dark:text-white mb-0.5">{chapter.title}</h4>
-                                                <p className="text-[12px] text-gray-400">
-                                                    {completedInChapter}/{totalInChapter} 节 · {chapterLessons.length * 10} 分钟
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
+                    return (
+                        <div key={chapter.id} className="mb-2">
+                            {/* Section Header */}
+                            <div className="px-5 py-2 flex items-center justify-between text-[13px] text-gray-400 dark:text-gray-600 font-normal">
+                                <span>{chapter.title}</span>
+                                <span>{completedInChapter}/{chapterLessons.length}</span>
+                            </div>
 
-                                    {/* Lessons List (Always Visible) */}
-                                    <div className="bg-gray-50/50 dark:bg-[#151515]">
-                                        <div className="py-1">
-                                            {chapterLessons.map((lesson, idx) => {
-                                                const isLessonCompleted = completedLessons.includes(lesson.id);
-                                                const isLessonCurrent = currentLesson?.id === lesson.id;
-                                                // Simplified lock logic for demo
-                                                const effectiveLocked = lesson.day > 1 && !isLessonCompleted && !isLessonCurrent && !completedLessons.includes(courseData.flatMap(c => c.lessons).find(l => l.day === lesson.day - 1)?.id || 'none');
+                            {/* Grouped List Background */}
+                            <div className="bg-white dark:bg-[#191919]">
+                                {chapterLessons.map((lesson, index) => {
+                                    const isLessonCompleted = completedLessons.includes(lesson.id);
+                                    const isLessonCurrent = currentLesson?.id === lesson.id;
+                                    // Lock logic considering visual flow
+                                    const isEffectiveLocked = isChapterLocked || (lesson.day > 1 && !isLessonCompleted && !isLessonCurrent && !completedLessons.includes(courseData.flatMap(c => c.lessons).find(l => l.day === lesson.day - 1)?.id || 'none'));
 
-                                                return (
-                                                    <div
-                                                        key={lesson.id}
-                                                        onClick={() => !effectiveLocked && navigate(`/course/${lesson.id}`)}
-                                                        className={`flex items-center gap-4 px-5 py-3.5 pl-[72px] cursor-pointer active:bg-gray-100 dark:active:bg-white/10 transition-colors
-                                                            ${isLessonCurrent ? 'bg-primary/5' : ''}
-                                                            ${idx !== chapterLessons.length - 1 ? 'border-b border-gray-100/50 dark:border-gray-800/50' : ''}
-                                                        `}
-                                                    >
-                                                        <div className="flex-1 min-w-0">
-                                                            <div className="flex items-center justify-between">
-                                                                <span className={`text-[15px] ${isLessonCurrent ? 'text-primary font-medium' :
-                                                                    isLessonCompleted ? 'text-gray-400 line-through' : 'text-text-main dark:text-gray-300'
-                                                                    }`}>
-                                                                    {lesson.day}. {lesson.title}
-                                                                </span>
-                                                                {effectiveLocked && <Icon name="lock" className="text-gray-300 text-xs" />}
-                                                                {!effectiveLocked && isLessonCompleted && <Icon name="check" className="text-emerald-500 text-sm" />}
-                                                                {!effectiveLocked && !isLessonCompleted && !isLessonCurrent && (
-                                                                    <Icon name="play_circle_outline" className="text-gray-300 text-lg opacity-0 group-hover:opacity-100" />
-                                                                )}
-                                                            </div>
-                                                            <div className="flex items-center gap-2 mt-0.5">
-                                                                <span className="text-[11px] text-gray-400">{lesson.duration}</span>
-                                                                {isLessonCurrent && <span className="text-[10px] text-primary bg-primary/10 px-1.5 rounded">进行中</span>}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-
-                                </div>
-                            );
-                        })}
-                    </div>
-                </section>
-
+                                    return (
+                                        <LessonCell
+                                            key={lesson.id}
+                                            lesson={lesson}
+                                            isCompleted={isLessonCompleted}
+                                            isCurrent={isLessonCurrent}
+                                            isLocked={!!isEffectiveLocked}
+                                            onClick={() => navigate(`/course/${lesson.id}`)}
+                                            isLast={index === chapterLessons.length - 1}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
+
+            {/* 4. Footer Placeholder/Padding */}
+            <div className="text-center py-6 text-[12px] text-gray-400 dark:text-gray-600">
+                每一步都算数
+            </div>
+
         </div>
     );
 };

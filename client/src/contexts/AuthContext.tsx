@@ -7,10 +7,8 @@ const GUEST_USER: UniAuthUser = {
   id: 'guest-user-id',
   email: 'guest@morning.local',
   phone: '',
-  display_name: '书友',
+  nickname: '书友',
   avatar_url: '',
-  created_at: new Date().toISOString(),
-  updated_at: new Date().toISOString(),
 };
 
 // Dev test account (no verification needed)
@@ -133,10 +131,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       id: 'dev-test-user-id',
       email: 'dev@morning.local',
       phone: DEV_TEST_PHONE,
-      display_name: '开发测试',
+      nickname: '开发测试',
       avatar_url: '',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
     };
     localStorage.setItem(GUEST_MODE_KEY, 'dev');
     setUser(devUser);

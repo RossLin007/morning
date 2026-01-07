@@ -18,7 +18,6 @@ interface ShopItem {
 }
 
 export const ZenShop: React.FC = () => {
-    const navigate = useNavigate();
     const { coins } = useGamification();
     const { showToast } = useToast();
     const { trigger: haptic } = useHaptics();
