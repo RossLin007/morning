@@ -82,7 +82,9 @@ const HeaderMenu: React.FC = () => {
         console.log(`Menu Action: ${action}`);
         setIsOpen(false);
         if (action === 'start') {
-            navigate('/initiate');
+            navigate('/camp/create'); // Navigate to Camp Creator Wizard
+        } else if (action === 'join') {
+            navigate('/camps/explore');
         } else if (action === 'mode') {
             navigate('/understand');
         }
@@ -99,6 +101,14 @@ const HeaderMenu: React.FC = () => {
 
             {isOpen && (
                 <div className="absolute right-0 top-full mt-2 w-auto whitespace-nowrap bg-white dark:bg-[#222] rounded-xl shadow-xl border border-gray-100 dark:border-gray-800 py-1 z-50 animate-in fade-in zoom-in-95 duration-100 origin-top-right">
+                    <button
+                        onClick={() => handleAction('join')}
+                        className="w-full px-4 py-2.5 text-left text-[14px] text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 flex items-center gap-2.5"
+                    >
+                        <Icon name="explore" className="text-[18px]" style={{ color: '#bfcad4', fontVariationSettings: "'wght' 300" }} />
+                        加入晨读
+                    </button>
+                    <div className="h-[1px] bg-gray-100 dark:bg-gray-800 mx-3.5" />
                     <button
                         onClick={() => handleAction('start')}
                         className="w-full px-4 py-2.5 text-left text-[14px] text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-white/5 flex items-center gap-2.5"

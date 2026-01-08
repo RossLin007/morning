@@ -3,35 +3,43 @@ import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useThemeColor } from '@/hooks/useThemeColor';
+import { currentCamp } from '@/data/campData';
+import { CampDailySchedule } from '@/types';
 
-export const InitiateMorningReading: React.FC = () => {
+export const CampEnrollment: React.FC = () => {
     const navigate = useNavigate();
-    const { t } = useTranslation();
+    // const { t } = useTranslation(); // Unused
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     useThemeColor(isDark ? '#000000' : '#FFFFFF');
 
     const [isScheduleExpanded, setIsScheduleExpanded] = useState(false);
 
-    const schedule = [
-        {
-            week: '第一周：看见内在的基础', days: [
-                'Day 1: 品德成功论', 'Day 2: 思维方式的力量', 'Day 3: 以原则为中心的思维方式',
-                'Day 4: 成长和改变的原则', 'Day 5: 品德是习惯的合成', 'Day 6: 成熟模式图', 'Day 7: 积极主动'
-            ]
-        },
-        {
-            week: '第二周：掌握选择与方向', days: [
-                'Day 8: 爱是动词', 'Day 9: 关注圈与影响圈', 'Day 10: 以终为始',
-                'Day 11: 领导与管理', 'Day 12: 改写人生剧本', 'Day 13: 各种生活中心', 'Day 14: 要事第一'
-            ]
-        },
-        {
-            week: '第三周：深化关系与持续更新', days: [
-                'Day 15: 一对一的人际关系', 'Day 16: 哪一种最好？', 'Day 17: 双赢品德',
-                'Day 18: 移情聆听', 'Day 19: 和而不同', 'Day 20: 转型者', 'Day 21: 日日新生'
-            ]
+    // Helper to group schedule into weeks
+    const weeks = React.useMemo(() => {
+        const grouped: { week: string; days: CampDailySchedule[] }[] = [];
+        const days = currentCamp.schedule;
+
+        for (let i = 0; i < days.length; i += 7) {
+            const weekNum = Math.floor(i / 7) + 1;
+            const weekDays = days.slice(i, i + 7);
+
+            // Determine week theme from the first day or specific logic
+            // For now, using a generic title or the themeFocus of the first day
+            const weekTitle = `第 ${weekNum} 周：${weekDays[0]?.themeFocus || '进阶修炼'}`;
+
+            grouped.push({
+                week: weekTitle,
+                days: weekDays
+            });
         }
-    ];
+        return grouped;
+    }, []);
+
+    // Format Date Range
+    const formatDate = (dateStr: string) => {
+        const date = new Date(dateStr);
+        return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`;
+    };
 
     return (
         <div className="min-h-screen bg-white dark:bg-[#111] pb-10">
@@ -41,7 +49,7 @@ export const InitiateMorningReading: React.FC = () => {
                     <button onClick={() => navigate(-1)} className="p-2 -ml-2 text-gray-600 dark:text-gray-400">
                         <Icon name="arrow_back" className="text-[24px]" />
                     </button>
-                    <h1 className="text-[17px] font-bold text-gray-900 dark:text-white">发起晨读</h1>
+                    <h1 className="text-[17px] font-bold text-gray-900 dark:text-white">晨读招募</h1>
                     <div className="w-10" />
                 </div>
             </header>
@@ -50,13 +58,13 @@ export const InitiateMorningReading: React.FC = () => {
                 {/* Hero Section */}
                 <div className="relative rounded-2xl overflow-hidden aspect-video shadow-lg">
                     <img
-                        src="https://images.unsplash.com/photo-1518002171953-a080ee817e1f?q=80&w=2070&auto=format&fit=crop"
-                        alt="Morning light"
+                        src={currentCamp.marketing.heroImage}
+                        alt="Camp Theme"
                         className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-6">
-                        <h2 className="text-2xl font-bold text-white mb-2">勇敢的心</h2>
-                        <p className="text-white/90 text-sm font-medium">愿每个凡人都能看见自己的不凡</p>
+                        <h2 className="text-2xl font-bold text-white mb-2">{currentCamp.period ? `第${currentCamp.period}期：` : ''}{currentCamp.theme}</h2>
+                        <p className="text-white/90 text-sm font-medium whitespace-pre-line">{currentCamp.marketing.corePhilosophy.split('\n')[1] || '由内而外的成长之道'}</p>
                     </div>
                 </div>
 
@@ -67,8 +75,13 @@ export const InitiateMorningReading: React.FC = () => {
                             <Icon name="calendar_today" className="text-primary text-xl" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-gray-900 dark:text-white mb-1">第八期晨读营</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">2025/10/11 - 11/02 (23天)</p>
+                            <h3 className="font-bold text-gray-900 dark:text-white mb-1">第{currentCamp.period}期晨读营</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                {formatDate(currentCamp.startDate)} - {formatDate(currentCamp.endDate)}
+                                <span className="ml-2 bg-primary/10 text-primary px-2 py-0.5 rounded-full text-xs">
+                                    {Math.round((new Date(currentCamp.endDate).getTime() - new Date(currentCamp.startDate).getTime()) / (1000 * 3600 * 24))}天
+                                </span>
+                            </p>
                         </div>
                     </div>
 
@@ -78,7 +91,9 @@ export const InitiateMorningReading: React.FC = () => {
                         </div>
                         <div>
                             <h3 className="font-bold text-gray-900 dark:text-white mb-1">每日共修</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">每天清晨 6:00 - 7:00</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                每天 {currentCamp.dailyStartTime} - {currentCamp.dailyEndTime}
+                            </p>
                         </div>
                     </div>
 
@@ -88,7 +103,22 @@ export const InitiateMorningReading: React.FC = () => {
                         </div>
                         <div>
                             <h3 className="font-bold text-gray-900 dark:text-white mb-1">小班深度</h3>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">10人/班 · 深度连接 · 用心陪伴</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                {currentCamp.enrollmentCap}人/班 ·
+                                <span className="mx-1">{currentCamp.marketing.features[1]}</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-start gap-4">
+                        <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/20 flex items-center justify-center shrink-0">
+                            <Icon name="payments" className="text-green-600 dark:text-green-400 text-xl" />
+                        </div>
+                        <div>
+                            <h3 className="font-bold text-gray-900 dark:text-white mb-1">费用</h3>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                ¥ {currentCamp.price} / 人
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -108,13 +138,13 @@ export const InitiateMorningReading: React.FC = () => {
                     </button>
                 </div>
 
-                {/* Content Preview */}
+                {/* Content Preview (Dynamic) */}
                 <div className="border border-gray-100 dark:border-white/5 rounded-2xl overflow-hidden">
                     <button
                         onClick={() => setIsScheduleExpanded(!isScheduleExpanded)}
                         className="w-full p-4 bg-gray-50 dark:bg-white/5 flex items-center justify-between"
                     >
-                        <span className="font-bold text-gray-900 dark:text-white">21天共读内容预览</span>
+                        <span className="font-bold text-gray-900 dark:text-white">{currentCamp.schedule.length}天共读内容预览</span>
                         <Icon
                             name="expand_more"
                             className={`text-gray-400 transition-transform duration-300 ${isScheduleExpanded ? 'rotate-180' : ''}`}
@@ -122,13 +152,16 @@ export const InitiateMorningReading: React.FC = () => {
                     </button>
 
                     <div className={`bg-white dark:bg-[#111] transition-all duration-300 ease-in-out ${isScheduleExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                        <div className="p-5 space-y-6">
-                            {schedule.map((week, idx) => (
+                        <div className="p-5 space-y-6 overflow-y-auto max-h-[60vh]">
+                            {weeks.map((week, idx) => (
                                 <div key={idx}>
-                                    <h4 className="font-bold text-primary mb-3 text-sm">{week.week}</h4>
-                                    <div className="space-y-2 pl-3 border-l-2 border-gray-100 dark:border-gray-800">
-                                        {week.days.map((day, dIdx) => (
-                                            <p key={dIdx} className="text-sm text-gray-600 dark:text-gray-400">{day}</p>
+                                    <h4 className="font-bold text-primary mb-3 text-sm sticky top-0 bg-white dark:bg-[#111] py-1">{week.week}</h4>
+                                    <div className="space-y-3 pl-3 border-l-2 border-gray-100 dark:border-gray-800">
+                                        {week.days.map((day) => (
+                                            <div key={day.day}>
+                                                <p className="text-sm font-medium text-gray-800 dark:text-gray-200">{day.title}</p>
+                                                <p className="text-xs text-gray-500 mt-0.5">焦点：{day.themeFocus} | {day.readingMaterial}</p>
+                                            </div>
                                         ))}
                                     </div>
                                 </div>
@@ -139,7 +172,7 @@ export const InitiateMorningReading: React.FC = () => {
 
                 {/* Contact */}
                 <div className="p-4 bg-gray-50 dark:bg-white/5 rounded-xl text-center">
-                    <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">如有疑问，请联系小凡</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">如有疑问，请联系我们</p>
                     <button className="text-primary font-medium text-sm hover:underline">联系主理人微信</button>
                 </div>
             </div>

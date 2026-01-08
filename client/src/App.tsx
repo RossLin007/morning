@@ -15,8 +15,9 @@ import { ScrollToTop } from '@/components/layout/ScrollToTop';
 import { RewardsOverlay } from '@/components/business/gamification/RewardsOverlay';
 import { PWAInstallBanner } from '@/components/layout/PWAInstallBanner';
 
-// New Pages
-import { InitiateMorningReading } from '@/pages/InitiateMorningReading';
+// Camp Pages
+import { CampEnrollment } from './pages/CampEnrollment';
+import { CampCreatorWizard } from './pages/CampCreatorWizard';
 import { UnderstandMode } from '@/pages/UnderstandMode';
 
 // Static Imports
@@ -38,7 +39,7 @@ import { Achievements } from '@/pages/Achievements';
 import { LearningReport } from '@/pages/LearningReport';
 import { Membership } from '@/pages/Membership';
 import { FanChat } from '@/pages/FanChat';
-import { Notifications } from '@/pages/Notifications';
+import { Interactions } from '@/pages/Interactions';
 import { ZenShop } from '@/pages/ZenShop';
 import { Settings } from '@/pages/Settings';
 import { AccountSecurity } from '@/pages/AccountSecurity';
@@ -56,10 +57,16 @@ import { MyReading } from '@/pages/MyReading';
 import { StoryViewer } from '@/pages/StoryViewer';
 import { FeedDetail } from '@/pages/FeedDetail';
 import { StoryPublish } from '@/pages/StoryPublish';
+import { StorySuccess } from '@/pages/StorySuccess';
+import { CampExplore } from '@/pages/CampExplore';
+import { CampDetail } from '@/pages/CampDetail';
+import { GroupChat } from '@/pages/GroupChat';
+import { GroupInfo } from '@/pages/GroupInfo';
+import { CategoryCamps } from '@/pages/CategoryCamps';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
-  const hideNavPaths = ['/course/', '/notes/', '/note/new', '/match', '/live', '/settings', '/login', '/relationships', '/membership', '/coach', '/profile/edit', '/history', '/notifications', '/report', '/post/', '/security', '/shop', '/diary', '/insights', '/sessions', '/ceremony', '/favorites', '/my-reading', '/fan', '/story/', '/feed/', '/story/new'];
+  const hideNavPaths = ['/course/', '/notes/', '/note/new', '/match', '/live', '/settings', '/login', '/relationships', '/membership', '/coach', '/profile/edit', '/history', '/report', '/post/', '/security', '/shop', '/diary', '/insights', '/sessions', '/ceremony', '/favorites', '/my-reading', '/fan', '/story/', '/feed/', '/story/new', '/camp/', '/camps/', '/group/', '/interactions'];
   const showBottomNav = !hideNavPaths.some(path => location.pathname.startsWith(path));
 
   // Expo Push Token Debugging
@@ -115,7 +122,7 @@ const AppContent: React.FC = () => {
                 <Route path="/coach" element={<ProtectedRoute><FanChat /></ProtectedRoute>} />
                 <Route path="/fan" element={<ProtectedRoute><FanChat /></ProtectedRoute>} />
                 <Route path="/ai-coach" element={<ProtectedRoute><FanChat /></ProtectedRoute>} />
-                <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+                {/* /notifications route removed - using popup overlay instead */}
                 <Route path="/sessions" element={<ProtectedRoute><PastSessions /></ProtectedRoute>} />
                 <Route path="/ceremony/opening" element={<ProtectedRoute><OpeningCeremony /></ProtectedRoute>} />
                 <Route path="/ceremony/closing" element={<ProtectedRoute><ClosingCeremony /></ProtectedRoute>} />
@@ -124,7 +131,13 @@ const AppContent: React.FC = () => {
                 <Route path="/story/:id" element={<ProtectedRoute><StoryViewer /></ProtectedRoute>} />
                 <Route path="/story/new" element={<ProtectedRoute><StoryPublish /></ProtectedRoute>} />
                 <Route path="/feed/:id" element={<ProtectedRoute><FeedDetail /></ProtectedRoute>} />
-                <Route path="/initiate" element={<ProtectedRoute><InitiateMorningReading /></ProtectedRoute>} />
+                <Route path="/camp/enroll" element={<ProtectedRoute><CampEnrollment /></ProtectedRoute>} />
+                <Route path="/camp/create" element={<ProtectedRoute><CampCreatorWizard /></ProtectedRoute>} />
+                <Route path="/camps/explore" element={<ProtectedRoute><CampExplore /></ProtectedRoute>} />
+                <Route path="/camps/:id" element={<ProtectedRoute><CampDetail /></ProtectedRoute>} />
+                <Route path="/category/:category" element={<ProtectedRoute><CategoryCamps /></ProtectedRoute>} />
+                <Route path="/group/:id" element={<ProtectedRoute><GroupChat /></ProtectedRoute>} />
+                <Route path="/group/:id/info" element={<ProtectedRoute><GroupInfo /></ProtectedRoute>} />
                 <Route path="/understand" element={<ProtectedRoute><UnderstandMode /></ProtectedRoute>} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>

@@ -182,6 +182,16 @@ class ApiClient {
                 body: JSON.stringify(data)
             })
     };
+
+    // --- Domain: Camps (Morning Camp Management) ---
+    public camps = {
+        create: (data: any) => this.fetch('/camps', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        }),
+        get: (id: string) => this.fetch(`/camps/${id}`),
+        list: () => this.fetch('/camps') // For future use
+    };
 }
 
 export const api = new ApiClient();

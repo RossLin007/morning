@@ -18,8 +18,10 @@ import checkinsRouter from "./routes/checkins.js";
 import relationshipsRouter from "./routes/relationships.js";
 import errorsRouter from "./routes/errors.js";
 import matchRouter from "./routes/match.js";
+import matchRouter from "./routes/match.js";
 import shopRouter from "./routes/shop.js";
 import sharesRouter from "./routes/shares.js";
+import campsRouter from "./routes/camps.js";
 
 // Middleware
 import { errorHandler } from "./middleware/errorHandler.js";
@@ -94,6 +96,7 @@ app.use("/api/errors", errorsRouter);
 app.use("/api/match", matchRouter);
 app.use("/api/shop", shopRouter);
 app.use("/api/shares", sharesRouter);
+app.use("/api/camps", campsRouter);
 
 // --- Production: Static Assets ---
 const clientDistPath = path.resolve(__dirname, "../../client/dist");

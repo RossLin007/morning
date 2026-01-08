@@ -4,6 +4,47 @@ import { useNavigate } from 'react-router-dom';
 import { Icon } from '@/components/ui/Icon';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
+// Mock Reading Groups Data
+const READING_GROUPS = [
+    {
+        id: 'g1',
+        name: '同见同行',
+        memberCount: 8,
+        members: [
+            { id: '100', name: '话梅', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=HuaMei' },
+            { id: '101', name: '林秦君', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix' },
+            { id: '102', name: '张伟', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Aneka' },
+            { id: '103', name: '李娜', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Willow' },
+        ],
+        lastMessage: { sender: 'Cheer顾倩', content: '萱萱: 好的~', time: '昨天 09:52' },
+        announcement: '欢迎大家来到同见同行读书群！让我们一起阅读，共同成长。'
+    },
+    {
+        id: 'g2',
+        name: '灯塔计划学习群',
+        memberCount: 12,
+        members: [
+            { id: '201', name: '话梅冰', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ice' },
+            { id: '202', name: 'Sarah', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah' },
+            { id: '203', name: 'Mike', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Mike' },
+            { id: '204', name: '老陈', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Chen' },
+        ],
+        lastMessage: { sender: '话梅冰', content: '真的好快呢，感觉知识都还没...', time: '昨天 09:29' }
+    },
+    {
+        id: 'g3',
+        name: '凡人学堂',
+        memberCount: 4,
+        members: [
+            { id: '301', name: '刘伟伟', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Liu' },
+            { id: '302', name: '连云港', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lian' },
+            { id: '303', name: 'Lisa', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lisa' },
+            { id: '304', name: 'Bob', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Bob' },
+        ],
+        lastMessage: { sender: '刘伟伟 连云港', content: '[动画表情] 点赞', time: '星期二' }
+    },
+];
+
 // Mock Classmates Data
 const CLASSMATES = [
     // Term 8
@@ -75,6 +116,43 @@ const Community: React.FC = () => {
                     </div>
                 )}
             </header>
+
+            {/* Reading Groups Section */}
+            {!isSearching && (
+                <div className="bg-white dark:bg-[#191919] mb-2">
+                    {READING_GROUPS.map((group, index) => (
+                        <div
+                            key={group.id}
+                            onClick={() => navigate(`/group/${group.id}`)}
+                            className={`flex items-center gap-3 px-4 py-3 cursor-pointer active:bg-gray-50 dark:active:bg-white/5 transition-colors ${index !== READING_GROUPS.length - 1 ? 'border-b border-gray-100 dark:border-gray-800' : ''
+                                }`}
+                        >
+                            {/* Group Avatar Grid (4 members shown) */}
+                            <div className="relative w-12 h-12 shrink-0">
+                                <div className="grid grid-cols-2 gap-[1px] w-full h-full rounded-md overflow-hidden bg-gray-200">
+                                    {group.members.slice(0, 4).map((member, idx) => (
+                                        <img
+                                            key={idx}
+                                            src={member.avatar}
+                                            alt=""
+                                            className="w-full h-full object-cover bg-white"
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Group Info */}
+                            <div className="flex-1 min-w-0">
+                                <h3 className="font-medium text-text-main dark:text-white text-[16px] truncate mb-1">{group.name}</h3>
+                                <p className="text-[13px] text-gray-400 dark:text-gray-500 truncate">
+                                    {group.lastMessage.sender}: {group.lastMessage.content}
+                                </p>
+                            </div>
+                            <Icon name="chevron_right" className="text-gray-300 dark:text-gray-600 text-lg shrink-0" />
+                        </div>
+                    ))}
+                </div>
+            )}
 
             {/* List */}
             <div className="pb-2">

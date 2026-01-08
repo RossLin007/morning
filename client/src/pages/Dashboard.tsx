@@ -28,6 +28,30 @@ interface FeedItem {
     moreCount?: number;
     type?: 'normal' | 'featured' | 'announcement' | 'insight';
     engagement?: { likes: number; comments: number };
+
+    // WeChat-style link preview
+    link?: {
+        url: string;
+        title: string;
+        description?: string;
+        image?: string;
+        source: string;  // e.g., "得到APP", "微信公众号"
+    };
+
+    // Quote/Repost another user's content
+    quote?: {
+        author: string;
+        authorAvatar: string;
+        content: string;
+        originalId?: string;
+    };
+
+    // Check-in / Streak tracking
+    checkin?: {
+        day: number;
+        streak: number;
+        badge?: string;
+    };
 }
 
 // Mock Story Data
@@ -61,13 +85,24 @@ const FEED_DATA: FeedItem[] = [
         coverImage: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&q=80',
         engagement: { likes: 24, comments: 8 },
     },
+    // AI Insight - Weekly report
     {
         id: '2',
         source: '小凡洞察',
         sourceAvatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=XiaoFan&backgroundColor=c0aede',
         timestamp: '30分钟前',
         title: '✨ 你上周的专注时长比前周提升了 28%',
-        subtitle: '保持这种进步速度，你正在重塑一个新的自己...',
+        subtitle: '保持这种进步速度，你正在重塑一个新的自己。本周建议：尝试在晨读后进行3分钟冥想，巩固学习效果。',
+        type: 'insight',
+    },
+    // AI Insight - Milestone
+    {
+        id: 'insight-2',
+        source: '小凡洞察',
+        sourceAvatar: 'https://api.dicebear.com/7.x/bottts/svg?seed=XiaoFan&backgroundColor=c0aede',
+        timestamp: '2小时前',
+        title: '🎯 恭喜你完成习惯一的全部课程！',
+        subtitle: '你已经掌握了\"积极主动\"的核心理念。接下来，习惯二\"以终为始\"将帮助你找到人生方向。',
         type: 'insight',
     },
     {
@@ -95,8 +130,26 @@ const FEED_DATA: FeedItem[] = [
         source: '晨读营',
         sourceAvatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=ChenDuYing&backgroundColor=6B8E8E',
         timestamp: '今天 06:30',
-        title: '📢 晨读时间到！今天我们一起读习惯二',
-        type: 'announcement',
+        title: '📢 晨读时间到！今天我们一起读习惯二「以终为始」',
+        // No special type - rendered as normal post from official account
+    },
+    // Meditation announcement - now a normal post
+    {
+        id: 'ann-2',
+        source: '晨读营',
+        sourceAvatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=ChenDuYing&backgroundColor=6B8E8E',
+        timestamp: '昨天 22:00',
+        title: '🧘 明早共修预告：6:30 晨读 + 6:55 五分钟冥想',
+        subtitle: '主题：觉察呼吸，回归当下',
+    },
+    // Camp enrollment - now a normal post
+    {
+        id: 'ann-3',
+        source: '晨读营',
+        sourceAvatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=ChenDuYing&backgroundColor=6B8E8E',
+        timestamp: '3天前',
+        title: '🎉 恭喜你被【高效能人士的七个习惯】第3期晨读营录取！',
+        subtitle: '请在 48 小时内完成缴费确认入营资格。开营日期：1月15日',
     },
     {
         id: '6',
@@ -258,7 +311,13 @@ const FEED_DATA: FeedItem[] = [
         sourceBio: '终身学习者 | 每日读书',
         timestamp: '1周前',
         title: '推荐一篇关于习惯养成的好文章，值得一读！',
-        subtitle: '🔗 《如何在21天内养成一个好习惯》- 来自得到APP',
+        link: {
+            url: 'https://dedao.cn/article/xxx',
+            title: '如何在21天内养成一个好习惯',
+            description: '习惯的养成需要21天？科学研究告诉你真相，以及更有效的习惯养成方法...',
+            image: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=200&q=80',
+            source: '得到APP',
+        },
         engagement: { likes: 67, comments: 12 },
     },
     // Quote/Repost example
@@ -268,19 +327,22 @@ const FEED_DATA: FeedItem[] = [
         sourceAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Chen&backgroundColor=c0aede',
         sourceBio: '读书第30天 | 坚持就是胜利',
         timestamp: '1周前',
-        title: '转发 @张伟 的读书笔记，写得太好了！',
-        subtitle: '💬 "积极主动不是冲动行事，而是在刺激与回应之间保持觉察..."',
+        title: '这段话说得太好了！每次读都有新的感悟。',
+        quote: {
+            author: '张伟',
+            authorAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=ZhangWei&backgroundColor=d1d4f9',
+            content: '积极主动不是冲动行事，而是在刺激与回应之间保持觉察。我们无法控制发生在自己身上的事，但我们可以选择如何回应。',
+        },
         engagement: { likes: 23, comments: 5 },
     },
-    // Achievement/Badge example
+    // Achievement/Badge - now a normal post from晨读营
     {
         id: '20',
-        source: '系统通知',
-        sourceAvatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=System&backgroundColor=FFD700',
+        source: '晨读营',
+        sourceAvatar: 'https://api.dicebear.com/7.x/shapes/svg?seed=ChenDuYing&backgroundColor=6B8E8E',
         timestamp: '2周前',
         title: '🏆 恭喜 Lisa 获得「连续打卡7天」徽章！',
         subtitle: '坚持是最好的老师，继续加油！',
-        type: 'announcement',
     },
     // Check-in example
     {
@@ -289,8 +351,12 @@ const FEED_DATA: FeedItem[] = [
         sourceAvatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Lisa&backgroundColor=b6e3f4',
         sourceBio: '设计师 | 读书第14天',
         timestamp: '2周前',
-        title: '✅ 今日打卡完成！第14天',
-        subtitle: '今天读了习惯三"要事第一"，学会了时间管理四象限。明天继续！',
+        title: '今天读了习惯三"要事第一"，学会了时间管理四象限。明天继续！',
+        checkin: {
+            day: 14,
+            streak: 14,
+            badge: '🔥',
+        },
         engagement: { likes: 156, comments: 28 },
     },
 ];
@@ -584,6 +650,101 @@ const CardOptionsMenu: React.FC<{ itemId: string }> = ({ itemId }) => {
     );
 };
 
+// WeChat-style Link Preview Card Component
+const LinkPreviewCard: React.FC<{ link: NonNullable<FeedItem['link']> }> = ({ link }) => {
+    return (
+        <div
+            className="mt-2.5 flex gap-3 p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            onClick={(e) => {
+                e.stopPropagation();
+                window.open(link.url, '_blank');
+            }}
+        >
+            {/* Thumbnail */}
+            {link.image && (
+                <div className="shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-700">
+                    <img
+                        src={link.image}
+                        alt=""
+                        className="w-full h-full object-cover"
+                    />
+                </div>
+            )}
+            {/* Content */}
+            <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                <h4 className="text-[14px] font-medium text-gray-800 dark:text-gray-200 line-clamp-2 leading-snug">
+                    {link.title}
+                </h4>
+                {link.description && (
+                    <p className="text-[12px] text-gray-500 dark:text-gray-400 line-clamp-1 mt-0.5">
+                        {link.description}
+                    </p>
+                )}
+                <div className="flex items-center gap-1 mt-1">
+                    <Icon name="link" className="text-[12px] text-gray-400" />
+                    <span className="text-[11px] text-gray-400">{link.source}</span>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// WeChat-style Quote/Repost Card Component
+const QuoteCard: React.FC<{ quote: NonNullable<FeedItem['quote']> }> = ({ quote }) => {
+    return (
+        <div className="mt-2.5 pl-3 border-l-4 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/30 rounded-r-lg py-2.5 pr-3">
+            <div className="flex items-center gap-2 mb-1.5">
+                <img
+                    src={quote.authorAvatar}
+                    alt={quote.author}
+                    className="w-5 h-5 rounded object-cover"
+                />
+                <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">
+                    @{quote.author}
+                </span>
+            </div>
+            <p className="text-[14px] text-gray-600 dark:text-gray-400 leading-relaxed line-clamp-3">
+                {quote.content}
+            </p>
+        </div>
+    );
+};
+
+// Check-in / Streak Card Component
+const CheckinBadge: React.FC<{ checkin: NonNullable<FeedItem['checkin']> }> = ({ checkin }) => {
+    return (
+        <div className="mt-2.5 flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 border border-amber-100 dark:border-amber-800/50">
+            {/* Badge Icon */}
+            <div className="shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
+                <span className="text-2xl">{checkin.badge || '🎯'}</span>
+            </div>
+            {/* Stats */}
+            <div className="flex-1">
+                <div className="flex items-baseline gap-1">
+                    <span className="text-2xl font-bold text-amber-600 dark:text-amber-400">
+                        第{checkin.day}天
+                    </span>
+                    {checkin.streak > 1 && (
+                        <span className="text-[13px] text-amber-500 dark:text-amber-500/80">
+                            连续{checkin.streak}天
+                        </span>
+                    )}
+                </div>
+                {/* Progress bar */}
+                <div className="mt-1.5 h-1.5 w-full bg-amber-100 dark:bg-amber-900/30 rounded-full overflow-hidden">
+                    <div
+                        className="h-full bg-gradient-to-r from-amber-400 to-orange-500 rounded-full transition-all duration-500"
+                        style={{ width: `${Math.min((checkin.day / 21) * 100, 100)}%` }}
+                    />
+                </div>
+                <p className="mt-1 text-[11px] text-amber-600/70 dark:text-amber-400/70">
+                    21天习惯养成进度
+                </p>
+            </div>
+        </div>
+    );
+};
+
 // Premium Feed Card Component
 const FeedCard: React.FC<{
     item: FeedItem;
@@ -591,7 +752,7 @@ const FeedCard: React.FC<{
 }> = ({ item, onClick }) => {
     const isFeatured = item.type === 'featured';
     const isInsight = item.type === 'insight';
-    const isAnnouncement = item.type === 'announcement';
+    // announcement no longer has special styling - treated as normal post from 晨读营 account
 
     // ImageViewer state
     const [viewerOpen, setViewerOpen] = React.useState(false);
@@ -606,7 +767,7 @@ const FeedCard: React.FC<{
         return (
             <article
                 onClick={onClick}
-                className="relative mx-4 mb-5 rounded-2xl overflow-hidden cursor-pointer group aspect-video"
+                className={`relative mx-4 mb-5 rounded-2xl overflow-hidden group aspect-video ${onClick ? 'cursor-pointer' : ''}`}
             >
                 {/* Background Image - Sunrise */}
                 <div className="absolute inset-0">
@@ -646,25 +807,27 @@ const FeedCard: React.FC<{
         return (
             <article
                 onClick={onClick}
-                className="px-4 py-4 cursor-pointer
+                className={`px-4 py-4 ${onClick ? 'cursor-pointer' : ''}
                     border-b border-gray-100 dark:border-gray-800
-                    hover:bg-gray-50 dark:hover:bg-white/5 
+                    ${onClick ? 'hover:bg-gray-50 dark:hover:bg-white/5' : ''}
                     transition-colors duration-200
-                    flex gap-3"
+                    flex gap-3`}
             >
-                {/* Left Column: Icon (Avatar size) */}
+                {/* Left Column: AI Avatar */}
                 <div className="shrink-0">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center flex-shrink-0 shadow-sm ring-1 ring-white dark:ring-gray-900">
-                        <Icon name="auto_awesome" className="text-white text-[18px]" />
-                    </div>
+                    <img
+                        src={item.sourceAvatar}
+                        alt={item.source}
+                        className="w-10 h-10 rounded-lg object-cover ring-2 ring-purple-200 dark:ring-purple-800 shadow-sm"
+                    />
                 </div>
 
                 {/* Right Column: Content */}
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-2">
-                            <span className="text-[15px] font-bold text-gray-900 dark:text-gray-100">
-                                AI 洞察
+                            <span className="text-[15px] font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                                {item.source}
                             </span>
                             <span className="text-[13px] text-gray-400">· {item.timestamp}</span>
                         </div>
@@ -685,51 +848,15 @@ const FeedCard: React.FC<{
         );
     }
 
-    if (isAnnouncement) {
-        return (
-            <article
-                onClick={onClick}
-                className="px-4 py-4 cursor-pointer
-                    border-b border-gray-100 dark:border-gray-800
-                    hover:bg-gray-50 dark:hover:bg-white/5 
-                    transition-colors duration-200
-                    flex gap-3"
-            >
-                {/* Left Column: Icon (Avatar size) */}
-                <div className="shrink-0">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center flex-shrink-0 shadow-sm ring-1 ring-white dark:ring-gray-900">
-                        <Icon name="campaign" className="text-white text-[18px]" />
-                    </div>
-                </div>
-
-                {/* Right Column: Content */}
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                        <div className="flex items-center gap-2">
-                            <span className="text-[15px] font-bold text-amber-600 dark:text-amber-500">
-                                公告
-                            </span>
-                            <span className="text-[13px] text-gray-400">· {item.timestamp}</span>
-                        </div>
-                        <CardOptionsMenu itemId={item.id} />
-                    </div>
-                    <h3 className="text-[15px] text-gray-800 dark:text-gray-200 leading-snug">
-                        {item.title}
-                    </h3>
-                </div>
-            </article>
-        );
-    }
-
     // Normal Card (Twitter Style - Flat)
     return (
         <article
             onClick={onClick}
-            className="px-4 py-4 cursor-pointer
+            className={`px-4 py-4 ${onClick ? 'cursor-pointer' : ''}
                 border-b border-gray-100 dark:border-gray-800
-                hover:bg-gray-50 dark:hover:bg-white/5 
+                ${onClick ? 'hover:bg-gray-50 dark:hover:bg-white/5' : ''}
                 transition-colors duration-200
-                flex items-start gap-3"
+                flex items-start gap-3`}
         >
             {/* Left Column: Avatar */}
             <div className="shrink-0">
@@ -826,6 +953,21 @@ const FeedCard: React.FC<{
                 {item.audio && (
                     <AudioPlayer audio={item.audio} />
                 )}
+
+                {/* Link Preview (WeChat-style) */}
+                {item.link && (
+                    <LinkPreviewCard link={item.link} />
+                )}
+
+                {/* Quote/Repost (WeChat-style) */}
+                {item.quote && (
+                    <QuoteCard quote={item.quote} />
+                )}
+
+                {/* Check-in Badge */}
+                {item.checkin && (
+                    <CheckinBadge checkin={item.checkin} />
+                )}
             </div>
 
             {/* Image Viewer Modal */}
@@ -849,32 +991,46 @@ export const Dashboard: React.FC = () => {
 
     return (
         <div className="min-h-full bg-gradient-to-b from-gray-50 to-white dark:from-[#0A0A0A] dark:to-[#111] font-sans pb-24">
-            {/* Header */}
+            {/* Header - 朝友圈模式 */}
             <header className="sticky top-0 z-40 pt-safe bg-white/90 dark:bg-[#111]/90 backdrop-blur-xl border-b border-gray-100/50 dark:border-gray-800/50">
                 <div className="h-[44px] flex items-center justify-between px-4">
-                    <div className="w-10" /> {/* Spacer */}
+                    {/* Left: Message Entry (朝友圈模式) */}
+                    <button
+                        onClick={() => navigate('/interactions')}
+                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative"
+                    >
+                        <Icon name="chat_bubble_outline" className="text-[22px] text-gray-600 dark:text-gray-300" />
+                        {/* Red dot for unread */}
+                        <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full" />
+                    </button>
                     <h1 className="text-[17px] font-semibold text-gray-900 dark:text-white tracking-tight">
                         {locale === 'zh-CN' ? '凡人晨读' : 'Morning Reader'}
                     </h1>
-                    <button
-                        onClick={() => navigate('/notifications')}
-                        className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative"
-                    >
-                        <Icon name="notifications_none" className="text-[22px] text-gray-600 dark:text-gray-300" />
-                        <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full" />
-                    </button>
+                    {/* Right: empty spacer for symmetry */}
+                    <div className="w-10" />
                 </div>
             </header>
 
             {/* Feed */}
             <section className="pt-4">
-                {FEED_DATA.map((item) => (
-                    <FeedCard
-                        key={item.id}
-                        item={item}
-                        onClick={() => navigate(`/feed/${item.id}`)}
-                    />
-                ))}
+                {FEED_DATA.map((item) => {
+                    // Apply interaction rules based on content type
+                    // - featured: Navigate to reading page
+                    // - insight: Can navigate to detail (deep content)
+                    // - announcement: No navigation (lightweight notification)
+                    // - normal with long content (subtitle): Can navigate to detail
+                    // - normal without subtitle (short/Story-like): No navigation, only image viewer works
+                    const isLongContent = item.subtitle && item.subtitle.length > 50;
+                    const canNavigate = item.type === 'featured' || item.type === 'insight' || isLongContent;
+
+                    return (
+                        <FeedCard
+                            key={item.id}
+                            item={item}
+                            onClick={canNavigate ? () => navigate(`/feed/${item.id}`) : undefined}
+                        />
+                    );
+                })}
 
                 {/* End of Feed */}
                 <div className="flex items-center justify-center py-8 text-gray-300 dark:text-gray-700">

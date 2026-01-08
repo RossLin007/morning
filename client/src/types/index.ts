@@ -202,3 +202,50 @@ export interface UserStats {
   totalInsights: number;
   currentStreak: number;
 }
+
+// --- Morning Camp Management Types (基于 SOP v2.7) ---
+
+export type CampRole = 'leader' | 'host' | 'sharer' | 'supporter' | 'recorder' | 'tech' | 'observer';
+
+export interface CampTeamMember {
+  userId: string;
+  name: string;
+  role: CampRole;
+  avatar?: string;
+}
+
+export interface CampDailySchedule {
+  day: number;
+  date: string; // ISO Date
+  title: string; // e.g. "Day 1: 品德成功论"
+  readingMaterial: string; // e.g. "Chapter 1, pp. 10-25"
+  themeFocus: string; // Core discussion point
+  reflectionQuestion: string; // Guiding question
+}
+
+export interface MorningCamp {
+  id: string;
+  period: number; // e.g. 8 (第八期)
+  theme: string; // e.g. "勇敢的心"
+  startDate: string; // ISO Date
+  endDate: string; // ISO Date
+  dailyStartTime: string; // e.g. "06:00"
+  dailyEndTime: string; // e.g. "07:00"
+  price: number; // e.g. 1800
+  enrollmentCap: number; // e.g. 10
+  status: 'draft' | 'recruiting' | 'active' | 'completed';
+
+  // Content Plan
+  schedule: CampDailySchedule[];
+
+  // Team
+  team: CampTeamMember[];
+
+  // Marketing & Recruitment
+  marketing: {
+    heroImage: string;
+    corePhilosophy: string; // Markdown
+    features: string[];
+    agreements: string[];
+  };
+}
